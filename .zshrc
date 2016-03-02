@@ -54,18 +54,21 @@ plugins=(git)
 # User configuration
 export PATH="/home/areid/.go:/home/areid/.go/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/areid/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
-
+# use spectrum_ls for codes
 ZSH_THEME="bullet-train"
-BULLETTRAIN_PROMPT_CHAR=:
+BULLETTRAIN_PROMPT_CHAR=":"
+BULLETTRAIN_STATUS_SHOW=false
+BULLETTRAIN_VIRTUALENV_BG=022
+BULLETTRAIN_PROMPT_ADD_NEWLINE=false
 BULLETTRAIN_TIME_SHOW=false
+BULLETTRAIN_PROMPT_SEPARATE_LINE=true
 BULLETTRAIN_NVM_SHOW=false
+BULLETTRAIN_DIR_BG=024
+BULLETTRAIN_GIT_BG=248
 BULLETTRAIN_RUBY_SHOW=false
 BULLETTRAIN_HG_SHOW=false
 source $ZSH/oh-my-zsh.sh
 unsetopt AUTO_CD
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -73,22 +76,10 @@ unsetopt AUTO_CD
 # else
 #   export EDITOR='mvim'
 # fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
+#
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-#
 # Set up the prompt
 # autoload -Uz promptinit
 # promptinit
@@ -98,11 +89,11 @@ unsetopt AUTO_CD
 # #"%F{${1:-green}}%~%p"
 # autoload -U colors
 # colors
+
 RPROMPT=""
 setopt histignorealldups sharehistory
 
-# Use emacs keybindings even if our EDITOR is set to vi
-bindkey -e
+# Some terminal specific keybindings 
 bindkey '^[[H' beginning-of-line
 bindkey '^[[F' end-of-line
 bindkey '\e[A' history-beginning-search-backward
@@ -113,14 +104,10 @@ bindkey '^[[5~' kill-buffer
 bindkey '^[[6~' kill-buffer
 bindkey '^[[3~' delete-char
 
-# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
+# Keep n lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=5000
 SAVEHIST=5000
 HISTFILE=~/.zsh_history
-
-# Load in my custom completion stuff (for nikola etc):
-# fpath=(~/.zsh/completion $fpath) 
-
 
 # Use modern completion system
 autoload -Uz compinit
@@ -142,7 +129,6 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-
 # pretty colours
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
@@ -150,33 +136,28 @@ alias vim='vimx'
 alias ccat='pygmentize'
 
 # Docker stuff
-#
-# Kill all running containers.
 alias dockerkillall='docker kill $(docker ps -q)'
-
-# Delete all stopped containers.
 alias dockercleanc='printf "\n>>> Deleting stopped containers\n\n" && docker rm $(docker ps -a -q)'
-
-# Delete all untagged images.
 alias dockercleani='printf "\n>>> Deleting untagged images\n\n" && docker rmi $(docker images -q -f dangling=true)'
-
-# Delete all stopped containers and untagged images.
 alias dockerclean='dockercleanc || true && dockercleani'
-
-alias ipython="python3 -c 'import IPython; IPython.terminal.ipapp.launch_new_instance()'"
+# alias somethinglike='cat ~/.zsh_history | grep'
+# alias ipython="python3 -c 'import IPython; IPython.terminal.ipapp.launch_new_instance()'"
 #plugins=(git)
-alias devmode="source ~/envs/myenv/bin/activate --no-site-packages"
-alias olympic="source ~/envs/olympic/bin/activate --no-site-packages"
+# alias devmode="source ~/envs/myenv/bin/activate --no-site-packages"
+# alias olympic="source ~/envs/olympic/bin/activate --no-site-packages"
 alias clusterous="~/code/clusterous/bin/clusterous"
 alias sshc="ssh -i ~/.ssh/clusterous.pem -l ec2-user"
 alias killworker="ssh -i ~/.ssh/clusterous.pem -l root %1 docker stop $(docker ps -a -q)"
 alias p3="ipython3"
 
 #$PYTHONPATH:
-export PYTHONPATH=/home/areid/code/statbadger:/home/areid/code/BDKD:/home/areid/code/clusterous
-#export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=cpp
+# export PYTHONPATH=/home/areid/code/statbadger:/home/areid/code/BDKD:/home/areid/code/clusterous
+# export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=cpp
 export GOPATH=/home/areid/.go
 export PATH=$GOPATH:$GOPATH/bin:$PATH
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+export WORKON_HOME=~/envs
+source /usr/bin/virtualenvwrapper.sh
 
 # my git config:
 # git init --bare $HOME/.myconf
