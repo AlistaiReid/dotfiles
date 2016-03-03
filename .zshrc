@@ -55,9 +55,9 @@ plugins=(git)
 export PATH="/home/areid/.go:/home/areid/.go/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/areid/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
 # use spectrum_ls for codes
-ZSH_THEME="bullet-train"
+ZSH_THEME="custom"
 BULLETTRAIN_PROMPT_CHAR=":"
-BULLETTRAIN_STATUS_SHOW=false
+BULLETTRAIN_STATUS_SHOW=true
 BULLETTRAIN_VIRTUALENV_BG=022
 BULLETTRAIN_PROMPT_ADD_NEWLINE=false
 BULLETTRAIN_TIME_SHOW=false

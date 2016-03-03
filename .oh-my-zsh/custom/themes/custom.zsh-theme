@@ -552,11 +552,16 @@ prompt_status() {
   # [[ $RETVAL -ne 0 && $BULLETTRAIN_STATUS_EXIT_SHOW != true ]] && symbols+="✘"
   # [[ $RETVAL -ne 0 && $BULLETTRAIN_STATUS_EXIT_SHOW == true ]] && symbols+="✘ $RETVAL"
   # [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡%f"
+  n_docker=$[$(docker ps | wc -l) -1]
+  SYMBOL_BG=052
+  # ⚛ ⛽ 🐳 ↁ
+  [[ $n_docker -ne 0 ]] && symbols+=" 🐳 $n_docker"
   [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="⚙"
   if [[ -n "$symbols" && $RETVAL -ne 0 ]]; then
-    prompt_segment $BULLETTRAIN_STATUS_ERROR_BG $BULLETTRAIN_STATUS_FG "$symbols"
+    prompt_segment $SYMBOL_BG $BULLETTRAIN_STATUS_FG "$symbols"
   elif [[ -n "$symbols" ]]; then
-    prompt_segment $BULLETTRAIN_STATUS_ERROR_BG $BULLETTRAIN_STATUS_FG "$symbols"
+    # $BULLETTRAIN_STATUS_ERROR_BG
+    prompt_segment $SYMBOL_BG $BULLETTRAIN_STATUS_FG "$symbols"
   fi
 
 }
