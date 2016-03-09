@@ -199,7 +199,7 @@ fi
 
 # GIT PROMPT
 if [ ! -n "${BULLETTRAIN_GIT_PREFIX+1}" ]; then
-  ZSH_THEME_GIT_PROMPT_PREFIX=" \ue0a0 "
+  ZSH_THEME_GIT_PROMPT_PREFIX="\ue0a0 "
 else
   ZSH_THEME_GIT_PROMPT_PREFIX=$BULLETTRAIN_GIT_PREFIX
 fi
@@ -209,10 +209,11 @@ else
   ZSH_THEME_GIT_PROMPT_SUFFIX=$BULLETTRAIN_GIT_SUFFIX
 fi
 if [ ! -n "${BULLETTRAIN_GIT_DIRTY+1}" ]; then
-  ZSH_THEME_GIT_PROMPT_DIRTY=" "
+  ZSH_THEME_GIT_PROMPT_DIRTY=""
   # " %F{red}✘%F{black}"
 else
-  ZSH_THEME_GIT_PROMPT_DIRTY=$BULLETTRAIN_GIT_DIRTY
+  ZSH_THEME_GIT_PROMPT_DIRTY=""
+  # $BULLETTRAIN_GIT_DIRTY
 fi
 if [ ! -n "${BULLETTRAIN_GIT_CLEAN+1}" ]; then
   ZSH_THEME_GIT_PROMPT_CLEAN=" %F{022}✔%F{black}"
@@ -298,7 +299,7 @@ prompt_segment() {
   [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
   [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
   if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
-    echo -n " %{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
+    echo -n "%{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%}"
   else
     echo -n "%{$bg%}%{$fg%} "
   fi
@@ -308,13 +309,20 @@ prompt_segment() {
 
 # End the prompt, closing any open segments
 prompt_end() {
-  if [[ -n $CURRENT_BG ]]; then
-    echo -n " %{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
-  else
-    echo -n "%{%k%}"
+
+  if [[ -n $PROMPT_DIRTY ]]; then
+    if [[ -n $CURRENT_BG ]]; then
+        echo -n "%{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
+    else
+        echo -n "%{%k%}"
+    fi
+    echo -n "%{%f%}"
+    CURRENT_BG=''
+    NEWLINE='
+\0'
+    echo -n "%{$NEWLINE%}"
+    PROMPT_DIRTY=
   fi
-  echo -n "%{%f%}"
-  CURRENT_BG=''
 }
 
 # ------------------------------------------------------------------------------
@@ -332,6 +340,7 @@ prompt_context() {
   [[ $BULLETTRAIN_CONTEXT_SHOW == false ]] && return
 
   local _context="$(context)"
+        import IPython; IPython.embed(); import sys; sys.exit()
   [[ -n "$_context" ]] && prompt_segment $BULLETTRAIN_CONTEXT_BG $BULLETTRAIN_CONTEXT_FG "$_context"
 }
 
@@ -375,13 +384,13 @@ prompt_git() {
       BULLETTRAIN_GIT_FG=$BULLETTRAIN_GIT_COLORIZE_DIRTY_FG_COLOR
     fi
     prompt_segment $BULLETTRAIN_GIT_BG $BULLETTRAIN_GIT_FG
-
     eval git_prompt=${BULLETTRAIN_GIT_PROMPT_CMD}
     if [[ $BULLETTRAIN_GIT_EXTENDED == true ]]; then
       echo -n ${git_prompt}$(git_prompt_status)
     else
       echo -n ${git_prompt}
     fi
+    PROMPT_DIRTY=1
   fi
 }
 
@@ -422,6 +431,25 @@ prompt_hg() {
       echo -n "☿ $rev@$branch" $st
     fi
   fi
+}
+
+
+# Dir: current working directory
+get_dir() {
+  local dir=''
+  local _context="$(context)"
+  if [[ $BULLETTRAIN_DIR_EXTENDED == 0 ]]; then
+    #short directories
+    dir="${dir}%1~"
+  elif [[ $BULLETTRAIN_DIR_EXTENDED == 2 ]]; then
+    #long directories
+    dir="${dir}%0~"
+  else
+    #medium directories (default case)
+    dir="${dir}%4(c:...:)%3c"
+  fi
+
+  echo $dir
 }
 
 # Dir: current working directory
@@ -500,12 +528,15 @@ prompt_virtualenv() {
   if [[ $BULLETTRAIN_VIRTUALENV_SHOW == false ]]; then
     return
   fi
-
+  # 🔨 ☭ ✊ ⬢
   local virtualenv_path="$VIRTUAL_ENV"
   if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
     prompt_segment $BULLETTRAIN_VIRTUALENV_BG $BULLETTRAIN_VIRTUALENV_FG "$(basename $virtualenv_path)"
+    PROMPT_DIRTY=1
   elif which pyenv &> /dev/null; then
     prompt_segment $BULLETTRAIN_VIRTUALENV_BG $BULLETTRAIN_VIRTUALENV_FG "$(pyenv version | sed -e 's/ (set.*$//' | tr '\n' ' ' | sed 's/.$//')"
+    PROMPT_DIRTY=1
+
   # else
   #   prompt_segment 011 064 $BULLETTRAIN_VIRTUALENV_PREFIX" "
   fi
@@ -552,16 +583,20 @@ prompt_status() {
   # [[ $RETVAL -ne 0 && $BULLETTRAIN_STATUS_EXIT_SHOW != true ]] && symbols+="✘"
   # [[ $RETVAL -ne 0 && $BULLETTRAIN_STATUS_EXIT_SHOW == true ]] && symbols+="✘ $RETVAL"
   # [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡%f"
+  local n_docker
   n_docker=$[$(docker ps | wc -l) -1]
   SYMBOL_BG=052
   # ⚛ ⛽ 🐳 ↁ
-  [[ $n_docker -ne 0 ]] && symbols+=" 🐳 $n_docker"
-  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="⚙"
+  [[ $n_docker -ne 0 ]] && symbols+="🐳 $n_docker"
+  local n_jobs
+  n_jobs=$(jobs -l | wc -l)
+  [[ $n_jobs -gt 0 ]] && symbols+="⚙$n_jobs"
   if [[ -n "$symbols" && $RETVAL -ne 0 ]]; then
     prompt_segment $SYMBOL_BG $BULLETTRAIN_STATUS_FG "$symbols"
   elif [[ -n "$symbols" ]]; then
     # $BULLETTRAIN_STATUS_ERROR_BG
     prompt_segment $SYMBOL_BG $BULLETTRAIN_STATUS_FG "$symbols"
+    PROMPT_DIRTY=1
   fi
 
 }
@@ -601,18 +636,18 @@ prompt_line_sep() {
 
 build_prompt() {
   RETVAL=$?
-  prompt_time
-  prompt_dir
+  # prompt_time
+  # prompt_dir
   prompt_custom
-  prompt_context
-  prompt_perl
-  prompt_ruby
+  # prompt_context
+  # prompt_perl
+  # prompt_ruby
   prompt_virtualenv
-  prompt_nvm
-  prompt_go
+  # prompt_nvm
+  # prompt_go
   prompt_git
-  prompt_hg
-  prompt_cmd_exec_time
+  # prompt_hg
+  # prompt_cmd_exec_time
   prompt_status
   prompt_end
 }
@@ -622,7 +657,9 @@ NEWLINE='
 PROMPT=''
 [[ $BULLETTRAIN_PROMPT_ADD_NEWLINE == true ]] && PROMPT="$PROMPT$NEWLINE"
 PROMPT="$PROMPT"'%{%f%b%k%}$(build_prompt)'
-[[ $BULLETTRAIN_PROMPT_SEPARATE_LINE == true ]] && PROMPT="$PROMPT$NEWLINE"
-PROMPT="$PROMPT"'%{${fg_bold[default]}%}'
-[[ $BULLETTRAIN_PROMPT_SEPARATE_LINE == false ]] && PROMPT="$PROMPT "
-PROMPT="$PROMPT"'$(prompt_char) %{$reset_color%}'
+# [[ $BULLETTRAIN_PROMPT_SEPARATE_LINE == true ]] && PROMPT="$PROMPT$NEWLINE"
+# PROMPT="$PROMPT"'%{${fg_bold[default]}%}'
+# [[ $BULLETTRAIN_PROMPT_SEPARATE_LINE == false ]] && PROMPT="$PROMPT "
+PROMPT=%{"$PROMPT"'${fg_bold[white]}%}$(get_dir): %{$reset_color%}'
+
+# PROMPT="$PROMPT"'${fg_bold[green]}$(get_dir)$(prompt_char) %{$reset_color%}'
