@@ -148,6 +148,8 @@ inoremap <C-Space> <esc>
 vnoremap <C-Space> <esc>
 noremap <C-Space> :w<CR>
 
+map x "_d
+map X "_D
 
 " Don't make a whole window split to docstring during completion
 autocmd FileType python setlocal completeopt-=preview
@@ -187,4 +189,6 @@ cmap w!! w !sudo tee >/dev/null %
 
 " Pydoc readablity
 let g:pydoc_window_lines=20
+
+set clipboard=unnamedplus 
 

@@ -145,8 +145,9 @@ alias dockerclean='dockercleanc || true && dockercleani'
 #plugins=(git)
 # alias devmode="source ~/envs/myenv/bin/activate --no-site-packages"
 # alias olympic="source ~/envs/olympic/bin/activate --no-site-packages"
-alias clusterous="~/code/clusterous/bin/clusterous"
+# alias clusterous="~/code/clusterous/bin/clusterous"
 alias sshc="ssh -i ~/.ssh/clusterous.pem -l ec2-user"
+alias sshd="ssh -NL 8890:localhost:8890 -l ubuntu "
 alias killworker="ssh -i ~/.ssh/clusterous.pem -l root %1 docker stop $(docker ps -a -q)"
 alias p3="ipython3"
 
@@ -158,6 +159,9 @@ export PATH=$GOPATH:$GOPATH/bin:$PATH
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 export WORKON_HOME=~/envs
 source /usr/bin/virtualenvwrapper.sh
+
+# Search in python files
+alias au="ag -G \".*py$\" "
 
 # my git config:
 # git init --bare $HOME/.myconf
