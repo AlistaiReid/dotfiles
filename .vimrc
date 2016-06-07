@@ -7,6 +7,8 @@ if has('gui_running')         " GVim only commands
     call plug#begin('~/.vim/plugged')
 
     Plug 'gmarik/Vundle.vim'      " The plugin manager
+
+    Plug 'Shougo/neocomplete.vim'  " Dan's awesome autocomplete
     " Plug 'Valloric/YouCompleteMe' " Syntax completion for c++
     Plug 'scrooloose/nerdtree'    " Old School File Browser and finder
     Plug 'scrooloose/syntastic'   " Syntax Checker
@@ -17,12 +19,12 @@ if has('gui_running')         " GVim only commands
     Plug 'justinmk/vim-sneak'     " Sneak
     Plug 'hynek/vim-python-pep8-indent'  " Pep-8 style indenting
     Plug 'kien/ctrlp.vim'  " Buffer navigation/fuzzy search
-
+    " Plug ' davidhalter/jedi-vim'  " vim jedi
     " Nice colour styles
     Plug 'vim-scripts/twilight'
     Plug '29decibel/codeschool-vim-theme'
     Plug 'nanotech/jellybeans.vim'
-    " Plug 'easymotion/vim-easymotion'  " hilights your motions with \\
+    Plug 'easymotion/vim-easymotion'  " hilights your motions with \\
     " Plug 'Shougo/unite.vim'  " smart buffer searching
     call plug#end()               " required
     filetype plugin indent on       " required
@@ -93,6 +95,36 @@ let g:ycm_key_invoke_completion = ''
 let g:ycm_key_detailed_diagnostics = ''
 let g:ycm_complete_in_strings = 0
 
+" Set up neocomplete.vim
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#sources#syntax#min_keyword_length = 2  " for numpy
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+" Key mappings:
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
+"Tab completion:
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><esc> pumvisible() ? neocomplete#smart_close_popup() : "<esc>"
+" inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><C-g> neocomplete#undo_completion()
+inoremap <expr><C-l> neocomplete#complete_common_string()
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
 
 " Al's custom maps:
 " Gets rid of hilighting after a search
@@ -137,8 +169,8 @@ nmap <F2> :lpre<CR>
 nnoremap <C-Tab> :bn<CR>
 nnoremap <C-S-Tab> :bp<CR>
 " Indent and de-indent
-map <Tab> >>
-map <S-Tab> <<
+nmap <Tab> >>
+nmap <S-Tab> <<
 vmap <Tab> >gv
 vmap <S-Tab> <gv
 " Allow gs to select the stuff you just pasted/edited...
@@ -157,18 +189,24 @@ autocmd FileType python setlocal completeopt-=preview
 " Syntax Checking
 let g:syntastic_cpp_check_header = 1
 let g:syntastic_python_python_exec = '/usr/bin/python3'
-let g:syntastic_python_checkers = ['python', 'flake8']
+let g:syntastic_python_checkers = ['flake8']  " add python?
 " use :SyntasticInfo to check >> flake8, python, pep8, pyflakes
+let g:syntastic_python_flake8_args='--ignore=W503,E731'
+j
+let g:pydoc_cmd = 'python3 -m pydoc'
+
+" need flake8, also pep257 and flake8-pep257
+"
 
 " If you prefer the Omni-Completion tip window to close when a selection is
 " made, these lines close it on movement
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 
-" YouCompleteMe setting
-let g:ycm_filetype_blacklist = {
-      \ 'tex' : 1,
-      \ 'latex' : 1,
-      \}
+" " YouCompleteMe setting
+" let g:ycm_filetype_blacklist = {
+"       \ 'tex' : 1,
+"       \ 'latex' : 1,
+"       \}
 
 " Airline settings
 let g:airline_powerline_fonts = 1  " This needs the powerline fonts
