@@ -101,6 +101,7 @@ let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#sources#syntax#min_keyword_length = 2  " for numpy
 let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
+
 " Key mappings:
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
@@ -188,15 +189,14 @@ autocmd FileType python setlocal completeopt-=preview
 
 " Syntax Checking
 let g:syntastic_cpp_check_header = 1
-let g:syntastic_python_python_exec = '/usr/bin/python3'
-let g:syntastic_python_checkers = ['flake8']  " add python?
-" use :SyntasticInfo to check >> flake8, python, pep8, pyflakes
-let g:syntastic_python_flake8_args='--ignore=W503,E731'
-j
+" lets use the right python here
+let g:syntastic_python_python_exec = '/usr/bin/env python3'
+let g:syntastic_python_checkers = ['flake8']
+" using flake8-pep257, flake8-pep257, flake8-naming
+" use :SyntasticInfo to check availability of flake8
+let g:syntastic_python_flake8_args='--ignore=W503,E731,D100,N806'
 let g:pydoc_cmd = 'python3 -m pydoc'
 
-" need flake8, also pep257 and flake8-pep257
-"
 
 " If you prefer the Omni-Completion tip window to close when a selection is
 " made, these lines close it on movement
@@ -221,6 +221,7 @@ set undodir=~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.tmp,~/tmp,/var/tmp,/tmp
 
 
+
 " Trick for when you forgot to sudo
 cmap w!! w !sudo tee >/dev/null %
 
@@ -229,4 +230,5 @@ cmap w!! w !sudo tee >/dev/null %
 let g:pydoc_window_lines=20
 
 set clipboard=unnamedplus 
+
 

@@ -151,6 +151,11 @@ alias sshd="ssh -NL 8890:localhost:8890 -l ubuntu "
 alias killworker="ssh -i ~/.ssh/clusterous.pem -l root %1 docker stop $(docker ps -a -q)"
 alias p3="ipython3"
 
+alias stash="mv -t ~/tmp/ "
+
+# make linter work all the time!
+# alias flake8="/usr/bin/env flake8"
+
 #$PYTHONPATH:
 # export PYTHONPATH=/home/areid/code/statbadger:/home/areid/code/BDKD:/home/areid/code/clusterous
 # export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=cpp
@@ -162,6 +167,9 @@ source /usr/bin/virtualenvwrapper.sh
 
 # Search in python files
 alias au="ag -G \".*py$\" "
+
+# Make template python files
+alias mk="cp ~/.defaultpy "
 
 # my git config:
 # git init --bare $HOME/.myconf

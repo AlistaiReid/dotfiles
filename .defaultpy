@@ -1,0 +1,19 @@
+""" Description.
+
+"""
+import matplotlib.pyplot as pl
+from scipy.optimize import minimize
+import autograd
+import autograd.numpy as np
+import logging
+log = logging.getLogger(name=__name__)
+
+
+def main():
+    return
+
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    np.set_printoptions(formatter={'float': (lambda f: '%.2f' % f)})
+    main()
