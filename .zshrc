@@ -174,6 +174,7 @@ alias mk="cp ~/.defaultpy "
 # my git config:
 # git init --bare $HOME/.myconf
 alias config='/usr/bin/git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
+alias track='git log --follow --find-renames=60%'
 # config config status.showUntrackedFiles no
 # config remote add origin git@github.com:AlistaiReid/dotfiles.git
 label Untitled
