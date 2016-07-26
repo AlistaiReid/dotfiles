@@ -1,7 +1,11 @@
-git clone --bare git@github.com:AlistaiReid/dotfiles.git
+mkdir .cfg
+
 function config {
    /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME $@
 }
+
+config clone --bare https://github.com/AlistaiReid/dotfiles.git
+
 mkdir -p .config-backup
 config checkout
 if [ $? = 0 ]; then
