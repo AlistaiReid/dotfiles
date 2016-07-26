@@ -172,8 +172,8 @@ alias au="ag -G \".*py$\" "
 alias mk="cp ~/.defaultpy "
 
 # my git config:
-# git init --bare $HOME/.myconf
-alias config='/usr/bin/git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
+# git init --bare $HOME/.cfg
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias track='git log --follow --find-renames=60%'
 
 alias git_prune="git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D"
