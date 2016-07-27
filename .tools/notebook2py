@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+import json
+import sys
+
+
+def main():
+    fname = sys.argv[1]
+
+    with open(fname + '.ipynb', 'r') as fi:
+        content = fi.read()
+
+    structure = json.loads(content)
+    cells = structure['cells']
+    basefname = fname.split('/')[-1]
+    with open(basefname + '.py', 'w') as fi:
+        for cell in cells:
+            if cell['cell_type'] == "code":
+                fi.write("".join(cell["source"]).replace('%matplotlib', '# %matplotlib'))
+
+
+if __name__=='__main__':
+    main()
+
