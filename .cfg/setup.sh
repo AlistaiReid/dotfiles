@@ -5,7 +5,8 @@ alias install="sudo apt-get install"
 install git
 install zsh
 
-sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O iomz.sh
+sudo source iomz.sh
 
 # Get my config files
 mkdir $HOME/.cfg
@@ -18,10 +19,10 @@ config config status.showUntrackedFiles no
 # If Debian:
 install silversearcher-ag
 # install dropbox
+install python3 python3-pip
+pip3 install virtualenvwrapper
 
 sudo chsh -s $(which zsh)
-
-sudo ln -s $HOME/.tools/label /usr/bin
-sudo ln -s $HOME/.tools/notebook2py /usr/bin
 sudo ln -s $HOME/.tools/custom.zsh-theme $HOME/areid/.oh-my-zsh/custom/themes
 
+mkdir $HOME/tmp
