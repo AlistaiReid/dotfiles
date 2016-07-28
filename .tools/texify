@@ -1,0 +1,60 @@
+#!/usr/bin/python3
+import os
+import sys
+import argparse
+import tempfile
+import re
+import subprocess
+
+def main(args, tmpdir):
+    inputf = args.inputf
+    outputf = args.o
+
+    if outputf is not None:
+        outputf = os.path.splitext(outputf)[0]
+
+    # print('Received:', inputf)
+    if inputf[0] == '#' and inputf[-1] == '#':
+        equation = ''.join(('$', inputf[1:-1], '$'))
+        if outputf is None:
+            outputf = 'unnamed'
+    else:
+        print('Was expecting .eqn file...')
+        if outputf is None:
+            outputf = os.path.splitext(inputf)[0]
+        with open(inputf, 'r') as datafile:
+            equation = datafile.read()
+
+    # insert the equation into a basic template
+    texdata = "\\documentclass[]{article} \n \\begin{document}\n" + \
+        "\\pagenumbering{gobble}\n \\begin{flushleft}\n" + \
+        equation + \
+        "\\\\ \n \end{flushleft} \n \end{document}\n"
+
+    tmptex = os.path.join(tmpdir, outputf + '.tex')
+    with open(tmptex, 'w') as texfile:
+        texfile.write(texdata)
+    subprocess.call(["latex", tmptex])
+    os.remove(tmptex)
+    os.remove(os.path.join(outputf + '.aux'))
+    os.remove(os.path.join(outputf + '.log'))
+    subprocess.call(['dvisvgm', '-n', outputf+'.dvi', outputf+'.svg']) 
+    os.remove(os.path.join(outputf + '.dvi'))
+    subprocess.call(['inkscape', outputf+'.svg', '--export-png='+outputf+'.png', '-d=300']) 
+#     this is the stub content for the equation...
+
+if __name__=='__main__':
+    parser = argparse.ArgumentParser(description=
+                                     'Convert tex equations to SVG')
+    parser.add_argument('inputf', metavar='fname', type=str,
+                        help='Tex filename to load')
+
+    parser.add_argument('-o', type=str, help='Output fname',
+                        default=None)
+
+    args = parser.parse_args()
+    tmpdir = ''  #tempfile.gettempdir()
+    main(args, tmpdir)
+
+
+

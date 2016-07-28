@@ -1,0 +1,12 @@
+#!/usr/bin/bash
+result=0
+wmctrl -xl |cut -f 4 -d' '|grep $1 |xargs test ! && result=1
+
+if [ $result -eq 1 ] 
+then
+  $2
+  wmctrl -xa $1 -b add,maximized_horz,maximized_vert
+else
+  wmctrl -xa $1
+fi
+

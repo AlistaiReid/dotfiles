@@ -105,7 +105,7 @@ alias au="ag -G \".*py$\" "  # search in python files
 export PATH=$HOME/.tools:$PATH
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 export WORKON_HOME=~/.envs
-source /usr/bin/virtualenvwrapper.sh
+source $(which virtualenvwrapper.sh)
 
 
 # Make template python files

@@ -4,9 +4,12 @@ alias install="sudo apt-get install"
 
 install git
 install zsh
+install nemo
+install vim-gtk
 
 wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O iomz.sh
-sudo source iomz.sh
+bash iomz.sh
+# This seems to overwrite my rc files
 
 # Get my config files
 mkdir $HOME/.cfg
@@ -20,9 +23,16 @@ config config status.showUntrackedFiles no
 install silversearcher-ag
 # install dropbox
 install python3 python3-pip
-pip3 install virtualenvwrapper
+sudo pip3 install virtualenvwrapper
 
 sudo chsh -s $(which zsh)
-sudo ln -s $HOME/.tools/custom.zsh-theme $HOME/areid/.oh-my-zsh/custom/themes
+config checkout ~/.zshrc
+mkdir -p $HOME/.oh-my-zsh/custom/themes
+sudo ln -s $HOME/.tools/custom.zsh-theme $HOME/.oh-my-zsh/custom/themes
+
+# in case docker isnt installed yet
+touch $HOME/.tools/docker
+chmod +x $HOME/.tools/docker
+
 
 mkdir $HOME/tmp
