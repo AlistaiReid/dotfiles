@@ -25,10 +25,13 @@ install silversearcher-ag
 install python3 python3-pip
 sudo pip3 install virtualenvwrapper
 
+install fonts-inconsolata
+--- set terminal to use inconsolata
+
 sudo chsh -s $(which zsh)
 config checkout ~/.zshrc
-mkdir -p $HOME/.oh-my-zsh/custom/themes
-sudo ln -s $HOME/.tools/custom.zsh-theme $HOME/.oh-my-zsh/custom/themes
+mkdir -p $ZSH_CUSTOM/themes
+sudo ln -s $HOME/.tools/custom.zsh-theme $ZSH_CUSTOM/themes/
 
 # in case docker isnt installed yet
 touch $HOME/.tools/docker

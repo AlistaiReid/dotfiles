@@ -1,6 +1,17 @@
 set nocompatible              " be iMproved, required
+
+
+
 filetype off                  " required
 if has('gui_running')         " GVim only commands
+
+    " auto-install plug if it doesn't exist
+    if empty(glob('~/.vim/autoload/plug.vim'))
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall | source $MYVIMRC
+    endif
+
     " set the runtime path to include Vundle and initialize
     " curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     " https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
