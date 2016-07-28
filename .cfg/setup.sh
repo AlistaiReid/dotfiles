@@ -6,10 +6,14 @@ install git
 install zsh
 install nemo
 install vim-gtk
+install curl
 
-wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O iomz.sh
-bash iomz.sh
-# This seems to overwrite my rc files
+# get inconsolata
+wget https://github.com/powerline/fonts/blob/master/Inconsolata/Inconsolata%20for%20Powerline.otf?raw=true
+
+
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# This seems to overwrite my rc files...
 
 # Get my config files
 mkdir $HOME/.cfg
