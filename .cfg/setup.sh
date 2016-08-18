@@ -8,6 +8,10 @@ install nemo
 install vim-gtk
 install curl
 
+# for emoji fonts
+install ttf-ancient-fonts 
+(need symbola, or android emoji font)
+
 # get inconsolata
 wget https://github.com/powerline/fonts/blob/master/Inconsolata/Inconsolata%20for%20Powerline.otf?raw=true
 
@@ -20,7 +24,7 @@ mkdir $HOME/.cfg
 echo ".cfg" >> .gitignore
 git clone --bare https://github.com/AlistaiReid/dotfiles.git $HOME/.cfg
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-config checkout
+config checkout -f
 config config status.showUntrackedFiles no
 
 # If Debian:
@@ -43,3 +47,9 @@ chmod +x $HOME/.tools/docker
 
 
 mkdir $HOME/tmp
+
+install insync
+install dropbox
+[install citrix?]
+
+

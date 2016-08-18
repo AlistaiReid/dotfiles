@@ -118,6 +118,9 @@ alias track='git log --follow --find-renames=60%'
 
 alias git_prune="git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D"
 
+alias pip_update="pip list --outdated | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
+
+
 # config config status.showUntrackedFiles no
 # config remote add origin git@github.com:AlistaiReid/dotfiles.git
 label Untitled
