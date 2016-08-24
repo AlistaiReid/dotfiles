@@ -50,6 +50,13 @@ mkdir $HOME/tmp
 
 install insync
 install dropbox
-[install citrix?]
+install xorg-xprop
+install extnsions pixel-saver and topicons and removable drive menu
+configure shortcuts to point to .tools gotoWindow etc for run or raise
 
+systemctl disable dhcpcd
+and install networkmanager and network-mananger-applet
+
+# nemo stays resident by making desktop icons
+gsettings set org.nemo.desktop show-desktop-icons false
 

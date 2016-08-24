@@ -90,7 +90,7 @@ if has('gui_running')
   colorscheme jellybeans
   set mouse=a       " mouse interactive, c for not interactive
   set autochdir     " Make vim automatically change dir to buffer's dir
-  set guifont=Inconsolata\ for\ Powerline\ 15  " my dps is a bit messed up
+  set guifont=Inconsolata\ for\ Powerline\ 14  " my dps is a bit messed up
   set foldmethod=indent
   set foldlevel=99
   let g:syntastic_always_populate_loc_list = 1
