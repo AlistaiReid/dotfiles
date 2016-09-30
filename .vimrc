@@ -102,9 +102,9 @@ endif
 "autocmd BufEnter * lcd %:p:h
 "autocmd BufEnter * if &modifiable | NERDTreeFind | wincmd p | endif
 let g:pymode_indent = 0  " Make sure pep8-indent gets to do its thing
-let g:ycm_key_invoke_completion = ''
-let g:ycm_key_detailed_diagnostics = ''
-let g:ycm_complete_in_strings = 0
+" let g:ycm_key_invoke_completion = ''
+" let g:ycm_key_detailed_diagnostics = ''
+" let g:ycm_complete_in_strings = 0
 
 " Set up neocomplete.vim
 let g:neocomplete#enable_at_startup = 1
@@ -121,8 +121,13 @@ function! s:my_cr_function()
   "return pumvisible() ? "\<C-y>" : "\<CR>"
 endfunction
 "Tab completion:
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" Tab should now complete the suggestion!
+inoremap <expr><TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
+" inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+
 " <C-h>, <BS>: close popup and delete backword char.
+let g:neocomplete#enable_auto_select = 1
 inoremap <expr><esc> pumvisible() ? neocomplete#smart_close_popup() : "<esc>"
 " inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><C-g> neocomplete#undo_completion()
