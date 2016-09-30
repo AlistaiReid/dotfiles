@@ -1,7 +1,7 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 export LC_ALL="en_US.UTF-8"
-export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/bin/core_perl"
 plugins=(git)
 
 
@@ -136,6 +136,11 @@ alias pacupd='sudo pacman -Sy' # Update and refresh the local package and ABS da
 alias pacinsd='sudo pacman -S --asdeps' # Install given package(s) as dependencies of another package
 alias pacmir='sudo pacman -Syy' # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist Created by newuser for 5.2
 
+# Get kubectl auto-completion stuff!
+source <(kubectl completion zsh)
+
+# Git flow completion:
+source ~/.tools/git-flow-completion/git-flow-completion.zsh
 
 # config config status.showUntrackedFiles no
 # config remote add origin git@github.com:AlistaiReid/dotfiles.git
