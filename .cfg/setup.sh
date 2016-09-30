@@ -47,7 +47,7 @@ chmod +x $HOME/.tools/docker
 
 
 mkdir $HOME/tmp
-
+install openssh
 install insync
 install dropbox
 install xorg-xprop
@@ -59,4 +59,8 @@ and install networkmanager and network-mananger-applet
 
 # nemo stays resident by making desktop icons
 gsettings set org.nemo.desktop show-desktop-icons false
+
+
+# setting up virtual env:
+install tk which provides tk-backend
 
