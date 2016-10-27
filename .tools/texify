@@ -26,7 +26,9 @@ def main(args, tmpdir):
             equation = datafile.read()
 
     # insert the equation into a basic template
-    texdata = "\\documentclass[]{article} \n \\begin{document}\n" + \
+    texdata = "\\documentclass[]{article} \n" + \
+            "\\usepackage{amssymb, amsmath}\n" + \
+            "\\begin{document}\n" + \
         "\\pagenumbering{gobble}\n \\begin{flushleft}\n" + \
         equation + \
         "\\\\ \n \end{flushleft} \n \end{document}\n"
