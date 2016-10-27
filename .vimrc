@@ -1,7 +1,5 @@
 set nocompatible              " be iMproved, required
 
-
-
 filetype off                  " required
 if has('gui_running')         " GVim only commands
 
@@ -114,27 +112,25 @@ let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
 
 " Key mappings:
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
-"Tab completion:
+" inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+" function! s:my_cr_function()
+"   return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+" endfunction
 
 " Tab should now complete the suggestion!
 inoremap <expr><TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
-" inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-
-" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><CR> pumvisible() ? "\<C-e>\<CR>" : "\<CR>"
+inoremap <expr><esc> pumvisible() ? "\<C-e>\<CR>" : "<esc>"
 let g:neocomplete#enable_auto_select = 1
-inoremap <expr><esc> pumvisible() ? neocomplete#smart_close_popup() : "<esc>"
-" inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-g> neocomplete#undo_completion()
-inoremap <expr><C-l> neocomplete#complete_common_string()
+
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
+
+autocmd FileType markdown nested NeoCompleteLock
+autocmd FileType text nested NeoCompleteLock
+
+" autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
