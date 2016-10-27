@@ -90,6 +90,8 @@ alias grep='grep --color=auto'
 alias vim='vimx'
 alias ccat='pygmentize'
 
+alias gitgg='git log --oneline --decorate --graph --all'
+
 # Docker shortcuts
 alias dockerkillall='docker kill $(docker ps -q)'
 alias dockercleanc='printf "\n>>> Deleting stopped containers\n\n" && docker rm $(docker ps -a -q)'
