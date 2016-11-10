@@ -16,7 +16,7 @@ if has('gui_running')         " GVim only commands
     call plug#begin('~/.vim/plugged')
 
     Plug 'gmarik/Vundle.vim'      " The plugin manager
-
+    Plug 'jmcantrell/vim-virtualenv'  " Python virtual envs!
     Plug 'Shougo/neocomplete.vim'  " Dan's awesome autocomplete
     " Plug 'Valloric/YouCompleteMe' " Syntax completion for c++
     Plug 'scrooloose/nerdtree'    " Old School File Browser and finder
@@ -132,7 +132,7 @@ autocmd FileType text nested NeoCompleteLock
 
 " autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType python setlocal omnifunc=python3complete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 " Enable heavy omni completion.
 if !exists('g:neocomplete#sources#omni#input_patterns')

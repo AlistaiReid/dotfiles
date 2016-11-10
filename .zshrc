@@ -120,7 +120,8 @@ alias track='git log --follow --find-renames=60%'
 
 alias git_prune="git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D"
 
-alias pip_update="pip list --outdated | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
+alias pipupg="pip install -U pip && pip freeze | cut -d = -f 1 | xargs -n1 pip install -U"
+# list --outdated | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
 
 
 alias pacall="LC_ALL=C pacman -Qi | sed -n '/^Name[^:]*: \(.*\)/{s//\1 /;x};/^Installed[^:]*: \(.*\)/{s//\1/;H;x;s/\n//;p}' | sort -nk2 | column -t"
