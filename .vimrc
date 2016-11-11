@@ -57,6 +57,10 @@ set whichwrap+=[]<>
 set nowrap        " if lines go off edge of screen, just dont show them :)
 set formatoptions-=t  " dont actually force a newline unless wrapping with gw
 
+" Disable beeping on some systems (eg double esc, navigate past end of doc)
+set noerrorbells visualbell t_vb=
+autocmd GUIEnter * set visualbell t_vb=
+
 " Visual Appearance
 " set cursorline
 set lazyredraw    "don't redraw whilst running macros
