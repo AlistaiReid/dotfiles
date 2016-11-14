@@ -60,8 +60,8 @@ bindkey '^[[6~' kill-buffer
 bindkey '^[[3~' delete-char
 
 # Keep n lines of history within the shell and save it to ~/.zsh_history:
-HISTSIZE=5000
-SAVEHIST=5000
+HISTSIZE=10000
+SAVEHIST=10000
 HISTFILE=~/.zsh_history
 
 # Completion system
@@ -118,7 +118,7 @@ alias mk="cp ~/.defaultpy "
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias track='git log --follow --find-renames=60%'
 
-alias git_prune="git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D"
+alias git-prune="git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D"
 
 alias pipupg="pip install -U pip && pip freeze | cut -d = -f 1 | xargs -n1 pip install -U"
 # list --outdated | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
