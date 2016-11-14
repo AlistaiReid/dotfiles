@@ -120,7 +120,7 @@ alias track='git log --follow --find-renames=60%'
 
 alias git-prune="git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D"
 
-alias pipupg="pip install -U pip && pip freeze | cut -d = -f 1 | xargs -n1 pip install -U"
+alias pipupg="pip install -U pip && pip freeze | grep -v 'git' | cut -d = -f 1 | xargs -n1 pip install -U"
 # list --outdated | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
 
 
