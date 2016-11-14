@@ -1,47 +1,45 @@
 set nocompatible              " be iMproved, required
 
 filetype off                  " required
-if has('gui_running')         " GVim only commands
 
-    " auto-install plug if it doesn't exist
-    if empty(glob('~/.vim/autoload/plug.vim'))
-    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall | source $MYVIMRC
-    endif
-
-    " set the runtime path to include Vundle and initialize
-    " curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    " https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    call plug#begin('~/.vim/plugged')
-
-    Plug 'gmarik/Vundle.vim'      " The plugin manager
-    Plug 'jmcantrell/vim-virtualenv'  " Python virtual envs!
-    Plug 'Shougo/neocomplete.vim'  " Dan's awesome autocomplete
-    " Plug 'Valloric/YouCompleteMe' " Syntax completion for c++
-    Plug 'scrooloose/nerdtree'    " Old School File Browser and finder
-    Plug 'scrooloose/syntastic'   " Syntax Checker
-    Plug 'bling/vim-airline'      " Nicer buffer information display
-    " Plug 'fs111/pydoc.vim'        " Python documentation viewer
-    Plug 'tpope/vim-commentary'   " Block commenting verb
-    Plug 'amix/vim-zenroom'       " Relaxed viewing
-    Plug 'justinmk/vim-sneak'     " Sneak
-    Plug 'hynek/vim-python-pep8-indent'  " Pep-8 style indenting
-    Plug 'kien/ctrlp.vim'  " Buffer navigation/fuzzy search
-    " Plug ' davidhalter/jedi-vim'  " vim jedi
-    " Nice colour styles
-    Plug 'vim-scripts/twilight'
-    Plug '29decibel/codeschool-vim-theme'
-    Plug 'nanotech/jellybeans.vim'
-    Plug 'easymotion/vim-easymotion'  " hilights your motions with \\
-    " Plug 'Shougo/unite.vim'  " smart buffer searching
-    call plug#end()               " required
-    filetype plugin indent on       " required
+" auto-install plug if it doesn't exist
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall | source $MYVIMRC
 endif
+
+" set the runtime path to include Vundle and initialize
+" curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+" https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+call plug#begin('~/.vim/plugged')
+
+Plug 'gmarik/Vundle.vim'      " The plugin manager
+Plug 'jmcantrell/vim-virtualenv'  " Python virtual envs!
+Plug 'Shougo/neocomplete.vim'  " Dan's awesome autocomplete
+" Plug 'Valloric/YouCompleteMe' " Syntax completion for c++
+Plug 'scrooloose/nerdtree'    " Old School File Browser and finder
+Plug 'scrooloose/syntastic'   " Syntax Checker
+Plug 'bling/vim-airline'      " Nicer buffer information display
+" Plug 'fs111/pydoc.vim'        " Python documentation viewer
+Plug 'tpope/vim-commentary'   " Block commenting verb
+Plug 'amix/vim-zenroom'       " Relaxed viewing
+Plug 'justinmk/vim-sneak'     " Sneak
+Plug 'hynek/vim-python-pep8-indent'  " Pep-8 style indenting
+Plug 'kien/ctrlp.vim'  " Buffer navigation/fuzzy search
+" Plug ' davidhalter/jedi-vim'  " vim jedi
+" Nice colour styles
+Plug 'vim-scripts/twilight'
+Plug '29decibel/codeschool-vim-theme'
+Plug 'nanotech/jellybeans.vim'
+Plug 'easymotion/vim-easymotion'  " hilights your motions with \\
+" Plug 'Shougo/unite.vim'  " smart buffer searching
+call plug#end()               " required
+filetype plugin indent on       " required
 
 " Default Formatting and Indenting
 syntax on
-set textwidth=78  " Line width (pep syntax check seems to need 78?)
+set textwidth=78  " Line width (pep syntax check seems to prefer 78?)
 set shiftwidth=4  " operation >> indents 4 columns; << unindents 4 columns
 set tabstop=4     " a hard TAB displays as 4 columns
 set expandtab     " insert spaces when hitting TABs
@@ -59,12 +57,16 @@ set whichwrap+=[]<>
 set nowrap        " if lines go off edge of screen, just dont show them :)
 set formatoptions-=t  " dont actually force a newline unless wrapping with gw
 
+" Disable beeping on some systems (eg double esc, navigate past end of doc)
+set noerrorbells visualbell t_vb=
+autocmd GUIEnter * set visualbell t_vb=
+
 " Visual Appearance
 " set cursorline
 set lazyredraw    "don't redraw whilst running macros
 set ruler
 "set relativenumber
-set colorcolumn=79
+set colorcolumn=80
 set scrolloff=30  "999
 set ttyfast
 
