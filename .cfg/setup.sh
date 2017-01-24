@@ -5,8 +5,14 @@ alias install="sudo apt-get install"
 install git
 install zsh
 install nemo
-install vim-gtk
+install vim-gtk or nvim???
 install curl
+
+if using nvim:
+install xsel to enable clipboard integratio
+ln -s ~/.vimrc .config/nvim/init.vim
+also nvim needs 'pip install neovim' in the path you run nvim from
+
 
 # for emoji fonts
 install ttf-ancient-fonts 

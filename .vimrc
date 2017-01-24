@@ -1,29 +1,52 @@
-set nocompatible              " be iMproved, required
+set nocompatible              " Clear settings. 
 
-filetype off                  " required
+" Auto-install plug if it doesnt exist
+if has('gui_running')
+    " Try to auto-install gvim plugin manager
+    if empty(glob('~/.vim/autoload/plug.vim'))
+      silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+          \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+      autocmd VimEnter * PlugInstall | source $MYVIMRC
+    endif
+else
+    if empty(glob('~/.config/nvim/autoload/plug.vim'))
+      silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+          \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+      autocmd VimEnter * PlugInstall | source $MYVIMRC
+    endif
+endif 
 
-" auto-install plug if it doesn't exist
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall | source $MYVIMRC
-endif
-
-" set the runtime path to include Vundle and initialize
-" curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-" https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 call plug#begin('~/.vim/plugged')
-
 Plug 'gmarik/Vundle.vim'      " The plugin manager
 Plug 'jmcantrell/vim-virtualenv'  " Python virtual envs!
-Plug 'Shougo/neocomplete.vim'  " Dan's awesome autocomplete
+if has('gui_running')
+    Plug 'Shougo/neocomplete.vim'  " Dan's awesome autocomplete
+    let g:neocomplete#enable_at_startup = 1
+    let g:neocomplete#enable_smart_case = 1
+    let g:neocomplete#sources#syntax#min_keyword_length = 2  " for numpy
+    let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+    let g:neocomplete#enable_auto_select = 1
+    let g:neocomplete#sources#omni#input_patterns = {}
+else
+    " The neovim version LOL
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    " Plug 'davidhalter/jedi-vim'  " Jedi autocomplete
+    " You will need to call :UpdateRemotePlugins and restart too...
+    let g:deoplete#enable_at_startup = 1
+    let g:deoplete#enable_smart_case = 1
+    let g:deoplete#sources#syntax#min_keyword_length = 2  " for numpy
+    let g:deoplete#lock_buffer_name_pattern = '\*ku\*'
+    let g:deoplete#enable_auto_select = 1
+    let g:deoplete#sources#omni#input_patterns = {}
+endif
+
 " Plug 'Valloric/YouCompleteMe' " Syntax completion for c++
 Plug 'scrooloose/nerdtree'    " Old School File Browser and finder
 Plug 'scrooloose/syntastic'   " Syntax Checker
 Plug 'bling/vim-airline'      " Nicer buffer information display
 " Plug 'fs111/pydoc.vim'        " Python documentation viewer
 Plug 'tpope/vim-commentary'   " Block commenting verb
-Plug 'amix/vim-zenroom'       " Relaxed viewing
+" Plug 'amix/vim-zenroom'       " Relaxed viewing
 Plug 'justinmk/vim-sneak'     " Sneak
 Plug 'hynek/vim-python-pep8-indent'  " Pep-8 style indenting
 Plug 'kien/ctrlp.vim'  " Buffer navigation/fuzzy search
@@ -87,17 +110,19 @@ if has('gui_running')
   " Get some screen space back:
   set guioptions-=T  " no toolbar
   set guioptions-=m  " no menu
-  colorscheme jellybeans
   set mouse=a       " mouse interactive, c for not interactive
-  set autochdir     " Make vim automatically change dir to buffer's dir
   set guifont=Inconsolata\ for\ Powerline\ 14  " my dps is a bit messed up
   set foldmethod=indent
   set foldlevel=99
-  let g:syntastic_always_populate_loc_list = 1
-  " NERDTree file browser
-  nnoremap <C-f> :NERDTreeFind <CR>
-  let g:NERDTreeQuitOnOpen = 1
 endif
+
+
+" NERDTree file browser
+set autochdir     " Make vim automatically change dir to buffer's dir
+nnoremap <C-f> :NERDTreeFind <CR>
+let g:NERDTreeQuitOnOpen = 1
+colorscheme jellybeans
+
 
 "autocmd BufEnter * lcd %:p:h
 "autocmd BufEnter * if &modifiable | NERDTreeFind | wincmd p | endif
@@ -106,11 +131,6 @@ let g:pymode_indent = 0  " Make sure pep8-indent gets to do its thing
 " let g:ycm_key_detailed_diagnostics = ''
 " let g:ycm_complete_in_strings = 0
 
-" Set up neocomplete.vim
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#sources#syntax#min_keyword_length = 2  " for numpy
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
 
 " Key mappings:
@@ -123,7 +143,6 @@ let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 inoremap <expr><TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
 inoremap <expr><CR> pumvisible() ? "\<C-e>\<CR>" : "\<CR>"
 inoremap <expr><esc> pumvisible() ? "\<C-e>\<CR>" : "<esc>"
-let g:neocomplete#enable_auto_select = 1
 
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -137,9 +156,8 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=python3complete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 " Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
+" if !exists('g:neocomplete#sources#omni#input_patterns')
+" endif
 
 " Al's custom maps:
 " Gets rid of hilighting after a search
@@ -177,8 +195,14 @@ nmap <C-Down> <C-e>
 nmap <C-k> <C-y>
 nmap <C-j> <C-e>
 " Flick through linting errors:
-nmap <F3> :lnext<CR>
-nmap <F2> :lpre<CR>
+" Go to next linting error!
+inoremap <F2> <esc> :w<CR> :ll<CR>
+inoremap <F3> <esc> :w<CR> :ll<CR>
+noremap <F2> :w<CR> :ll<CR>
+noremap <F3> :w<CR> :ll<CR>
+" nmap <F3> :lnext<CR>
+" nmap <F2> :lpre<CR>
+"
 "set pastetoggle=<F2> " Get GUI pasting working
 " Go forward and backward tabs with ctrl-tab and ctrl-shift-tab
 nnoremap <C-Tab> :bn<CR>
@@ -191,8 +215,8 @@ vmap <S-Tab> <gv
 " Allow gs to select the stuff you just pasted/edited...
 map gs '[V']
 " I actually want ctrl-space for my own purposes - take it back from ycm
-inoremap <C-Space> <esc>
-vnoremap <C-Space> <esc>
+inoremap <C-Space> <esc> :w<CR>
+vnoremap <C-Space> <esc> :w<CR>
 noremap <C-Space> :w<CR>
 
 map x "_d
@@ -202,13 +226,15 @@ map X "_D
 autocmd FileType python setlocal completeopt-=preview
 
 " Syntax Checking
+let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_cpp_check_header = 1
 " lets use the right python here
-let g:syntastic_python_python_exec = '/usr/bin/env python3'
+let g:syntastic_python_python_exec = 'python3'
 let g:syntastic_python_checkers = ['flake8']
 " using flake8-pep257, flake8-pep257, flake8-naming
 " use :SyntasticInfo to check availability of flake8
-let g:syntastic_python_flake8_args='--ignore=W503,E731,D100,N806'
+" let g:syntastic_python_flake8_args='--ignore=W503,E731,D100,N806'
+let g:syntastic_always_populate_loc_list = 1
 let g:pydoc_cmd = 'python3 -m pydoc'
 
 
