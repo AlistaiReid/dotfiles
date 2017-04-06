@@ -59,6 +59,9 @@ bindkey '^[[5~' kill-buffer
 bindkey '^[[6~' kill-buffer
 bindkey '^[[3~' delete-char
 
+# get matplotlib working
+export MPLBACKEND=TKAGG
+
 # Keep n lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=10000
 SAVEHIST=10000

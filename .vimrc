@@ -45,7 +45,7 @@ Plug 'AndrewRadev/splitjoin.vim'    " gS 1 line to multi, gJ single
 
 " Syntax and Autocomplete
 Plug 'w0rp/ale'                     " Async Linting Engine
-Plug 'maralla/completor.vim'        " Code completor (pacin python3-jedi)
+Plug 'maralla/completor.vim'        " Code completor (pip install jedi)
 call plug#end()
 
 syntax on
@@ -107,6 +107,13 @@ nmap <silent> <F3> <Plug>(ale_next)
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+
+" And close it if you start navigating
+autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+
+" Save when focus lost
+set autowrite
+au FocusLost * silent! w
 
 " NERDTree file browser
 nnoremap <C-f> :NERDTreeFind <CR>
