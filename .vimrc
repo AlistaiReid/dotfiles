@@ -112,8 +112,9 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 
 " Save when focus lost
-set autowrite
+" au BufLeave * silent! w
 au FocusLost * silent! w
+au InsertLeave * silent! w
 
 " NERDTree file browser
 nnoremap <C-f> :NERDTreeFind <CR>
@@ -121,12 +122,15 @@ let g:NERDTreeQuitOnOpen = 1
 let g:pymode_indent = 0  " Make sure pep8-indent gets to do its thing
 
 " Remove search hilighting
-noremap <F8> :nohl<CR> 
-inoremap <F8> <C-o>:nohl<CR>
+noremap <silent> <F8> :nohl<CR> 
+inoremap <silent> <F8> <C-o>:nohl<CR>
 
 " Insert python debug point after:
-map <C-x> oimport IPython; IPython.embed(); import sys; sys.exit()<Esc>^
-imap <C-x> import IPython; IPython.embed(); import sys; sys.exit()<CR>
+" map <C-x> oimport IPython; IPython.embed(); import sys; sys.exit()<Esc>
+" imap <C-x> import IPython; IPython.embed(); import sys; sys.exit()<CR>
+
+map <C-x> oimport inspect, IPython, sys; print("\nDebug {}:{} in {}()\n".format(*inspect.stack()[0][1:4])); IPython.embed(); sys.exit()  # NOQA<Esc>
+imap <C-x> import inspect, IPython, sys; print("\nDebug {}:{} in {}()\n".format(*inspect.stack()[0][1:4])); IPython.embed(); sys.exit()  # NOQA<CR>
 
 " Disable Q - most of my vim accidents happen when I hit q
 map Q <Nop>
@@ -184,18 +188,17 @@ map gs '[V']
 
 " Weirdest thing in this file - control-space is escape 
 inoremap <C-Space> <esc>
+nnoremap <C-Space> :w<CR>
 vnoremap <C-Space> <esc>
-noremap <C-Space> :w<CR>
 
+" delete buffer
+noremap <C-z> :bprev<CR>:bd#<CR>
 
 " Make tmp dirs in standard places
 set nobackup
 set noswapfile
 set undodir=~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.tmp,~/tmp,/var/tmp,/tmp
-
-" Trick for when you forgot to sudo
-cmap w!! w !sudo tee >/dev/null %
 
 " " Remove temptation
 " nnoremap <Up>    <NOP>
