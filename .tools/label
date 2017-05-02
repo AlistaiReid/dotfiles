@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
+# Don't forget zshrc DISABLE_AUTO_TITLE="true"
 echo -ne "\033]0;»$1\007"
