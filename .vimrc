@@ -28,6 +28,8 @@ Plug 'nanotech/jellybeans.vim'      " Dark colourscheme
 Plug 'tpope/vim-eunuch'             " for :SudoWrite :Rename
 Plug 'itchyny/lightline.vim'        " Status line
 Plug 'taohex/lightline-buffer'      " Buffer navigate
+Plug 'junegunn/goyo.vim'            " Turn off all the line numbery stuff.
+Plug 'junegunn/limelight.vim'       " Hilight current paragraph
 
 " Git Integration
 Plug 'tpope/vim-fugitive'
@@ -63,6 +65,10 @@ if has('gui_running')
   set mouse=a        " mouse interactive, c for not interactive
   set guifont=Inconsolata\ for\ Powerline\ 14  " my dps is a bit messed up
 endif
+
+" Use limelight together with Goyo... (writing tex...)
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
 
 " Color Scheme
 colorscheme jellybeans
@@ -103,7 +109,6 @@ nmap <silent> <F2> <Plug>(ale_previous)
 nmap <silent> <F3> <Plug>(ale_next)
 
 " Completor plugin - hook up tab
-" let g:completor_auto_trigger = 0
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
@@ -201,9 +206,54 @@ set undodir=~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.tmp,~/tmp,/var/tmp,/tmp
 
 " " Remove temptation
-" nnoremap <Up>    <NOP>
-" nnoremap <Down>  <NOP>
+nnoremap <Up> gk
+nnoremap <Down> gj
+inoremap <Up> <Esc>gka
+inoremap <Down> <Esc>gja
+nnoremap <End> g$
+nnoremap <Home> g0
+inoremap <End> <Esc>g$a
+inoremap <Home> <Esc>g0a
+
 " nnoremap <Left>  <NOP>
 " nnoremap <Right> <NOP>
+
+" More Goyo stuff
+function! s:goyo_enter()
+  let b:quitting = 0
+  let b:quitting_bang = 0
+  autocmd QuitPre <buffer> let b:quitting = 1
+  cabbrev <buffer> q! let b:quitting_bang = 1 <bar> q!
+  let g:completor_auto_trigger = 0
+endfunction
+
+function! s:goyo_leave()
+  " Quit Vim if this is the only remaining buffer
+  if b:quitting && len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
+    if b:quitting_bang
+      qa!
+    else
+      qa
+    endif
+  endif
+  let g:completor_auto_trigger = 1
+endfunction
+
+" More Tex configuration
+let g:tex_flavor='latex'
+augroup ft_tex
+    au!
+    au FileType tex setlocal formatoptions="" 
+    au FileType tex setlocal textwidth=0
+    au FileType tex setlocal wrapmargin=0
+    au FileType tex setlocal wrap
+    au FileType tex setlocal breakindent
+    au FileType tex setlocal shiftwidth=2 
+    au FileType tex setlocal tabstop=2 
+    au FileType tex setlocal spelllang=en_gb 
+    au FileType tex setlocal linebreak 
+    au FileType tex setlocal spell 
+    au FileType tex setlocal iskeyword+=: 
+augroup END
 
 
