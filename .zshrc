@@ -108,6 +108,8 @@ alias dockerclean='dockercleanc || true && dockercleani'
 alias stash="mv -t ~/tmp/ "
 alias au="ag -G \".*py$\" "  # search in python files
 export PATH=$HOME/.tools:$PATH
+
+# Python virtual envs
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 export WORKON_HOME=~/.envs
 source $(which virtualenvwrapper.sh)
@@ -143,11 +145,18 @@ alias pacinsd='sudo pacman -S --asdeps' # Install given package(s) as dependenci
 alias pacmir='sudo pacman -Syy' # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist Created by newuser for 5.2
 
 # Get kubectl auto-completion stuff!
-source <(kubectl completion zsh)
+# source <(kubectl completion zsh)
 
 # Git flow completion:
 source ~/.tools/git-flow-completion/git-flow-completion.zsh
 
 # config config status.showUntrackedFiles no
 # config remote add origin git@github.com:AlistaiReid/dotfiles.git
+export LD_LIBRARY_PATH=/opt/cuda/lib64/
+
+export MYPYPATH=/home/areid/code/stubs
+
+# Get rid of extensive tensorflow logging.
+export TF_CPP_MIN_LOG_LEVEL=3
+
 label Untitled

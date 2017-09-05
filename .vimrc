@@ -4,6 +4,7 @@
 set nocompatible
 filetype off
 
+
 " Auto-install plugin manager if it doesnt exist (and PlugInstall)
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -86,10 +87,10 @@ set shiftround            " round indent to multiple of 'shiftwidth'
 set autoindent            " align the new line indent with the previous line
 set smarttab              " tab width determined by shiftwidth
 set hidden                " Opening a new buffer hides current, doesnt write
-set matchpairs+=<:>       " more pairs we can use, for html etc
+" set matchpairs+=<:>       " more pairs we can use, for html etc
+set matchpairs=
 set matchtime=2           " 0.2 seconds
 set hlsearch              " hilight search results (F8 to un-hilight)
-set showmatch             " Hilight matching brackets
 set whichwrap+=[]<>hl     " link lines by left/right to prev/next line.
 set nowrap                " let lines go off edge of screen
 set formatoptions-=t      " dont actually force a newline unless wrapping with gw
@@ -103,6 +104,7 @@ set incsearch             " Incremental search
 set ssop-=options         " Don't save settings in a session - allows changes to
 set ssop-=folds           " this vimrc file to apply to old sessions.
 set autochdir             " Make vim automatically change dir to buffer's dir
+" set noshowmatch           " Dont hilight parenthesis matching (errors)
 
 " Navigate ALE Errors
 nmap <silent> <F2> <Plug>(ale_previous)
@@ -129,6 +131,9 @@ let g:pymode_indent = 0  " Make sure pep8-indent gets to do its thing
 " Remove search hilighting
 noremap <silent> <F8> :nohl<CR> 
 inoremap <silent> <F8> <C-o>:nohl<CR>
+
+vnoremap <silent> <F6> :s/"[^"]*"/\=substitute(submatch(0), ' ', '^', 'g')/g<CR>gvgwvap:s/"[^"]*"/\=substitute(submatch(0), '\^', ' ', 'g')/g<CR>:nohl<CR>
+vnoremap <silent> <F7> :s/'[^']*'/\=substitute(submatch(0), ' ', '^', 'g')/g<CR>gvgwvap:s/'[^']*'/\=substitute(submatch(0), '\^', ' ', 'g')/g<CR>:nohl<CR>
 
 " Insert python debug point after:
 " map <C-x> oimport IPython; IPython.embed(); import sys; sys.exit()<Esc>
@@ -205,19 +210,9 @@ set noswapfile
 set undodir=~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.tmp,~/tmp,/var/tmp,/tmp
 
-" " Remove temptation
-nnoremap <Up> gk
-nnoremap <Down> gj
-inoremap <Up> <Esc>gka
-inoremap <Down> <Esc>gja
-nnoremap <End> g$
-nnoremap <Home> g0
-inoremap <End> <Esc>g$a
-inoremap <Home> <Esc>g0a
 
 " nnoremap <Left>  <NOP>
 " nnoremap <Right> <NOP>
-
 " More Goyo stuff
 function! s:goyo_enter()
   let b:quitting = 0
@@ -239,6 +234,9 @@ function! s:goyo_leave()
   let g:completor_auto_trigger = 1
 endfunction
 
+nnoremap <buffer> <Home> ^
+inoremap <buffer> <Home> <Esc>^i
+
 " More Tex configuration
 let g:tex_flavor='latex'
 augroup ft_tex
@@ -254,6 +252,13 @@ augroup ft_tex
     au FileType tex setlocal linebreak 
     au FileType tex setlocal spell 
     au FileType tex setlocal iskeyword+=: 
+    " only want these guys in latex
+    " au FileType tex nnoremap <buffer> <Up> gk
+    " au FileType tex nnoremap <buffer> <Down> gj
+    " au FileType tex inoremap <buffer> <Up> <Esc>gka
+    " au FileType tex inoremap <buffer> <Down> <Esc>gja
+    " au FileType tex nnoremap <buffer> <End> g$
+    " au FileType tex nnoremap <buffer> <Home> g^
+    " au FileType tex inoremap <buffer> <End> <Esc>g$i
+    " au FileType tex inoremap <buffer> <Home> <Esc>g^i
 augroup END
-
-

@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+sudo cryptsetup luksOpen ~/data/storage.img data --key-file /run/media/areid/A7B7-752B/nothing.txt
+sudo mount /dev/mapper/data ~/data/secure
