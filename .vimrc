@@ -24,16 +24,21 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " GUI plugins
-Plug 'scrooloose/nerdtree'          " Tree based file browser (ctrl-f)
-Plug 'nanotech/jellybeans.vim'      " Dark colourscheme
-Plug 'tpope/vim-eunuch'             " for :SudoWrite :Rename
-Plug 'itchyny/lightline.vim'        " Status line
-Plug 'taohex/lightline-buffer'      " Buffer navigate
-Plug 'junegunn/goyo.vim'            " Turn off all the line numbery stuff.
-Plug 'junegunn/limelight.vim'       " Hilight current paragraph
+Plug 'scrooloose/nerdtree'            " Tree based file browser (ctrl-f)
+Plug 'nanotech/jellybeans.vim'        " Dark colourscheme
+Plug 'rafi/awesome-vim-colorschemes'  " Many colourschemes
+Plug 'endel/vim-github-colorscheme'   " Light colourscheme
+Plug 'tpope/vim-eunuch'               " for :SudoWrite :Rename
+Plug 'itchyny/lightline.vim'          " Status line
+Plug 'taohex/lightline-buffer'        " Buffer navigate
+Plug 'junegunn/goyo.vim'              " Turn off all the line numbery stuff.
+Plug 'junegunn/limelight.vim'         " Hilight current paragraph
 
 " Git Integration
 Plug 'tpope/vim-fugitive'
+
+" IPython integration
+" Plug 'ivanov/vim-ipython'
 
 " Navigation
 Plug 'easymotion/vim-easymotion'    " hilights your motions with \\
@@ -64,7 +69,8 @@ if has('gui_running')
   set guioptions-=e  " no gui tabs
   set guioptions-=m  " no menu
   set mouse=a        " mouse interactive, c for not interactive
-  set guifont=Inconsolata\ for\ Powerline\ 14  " my dps is a bit messed up
+  set guifont=Inconsolata\ Bold\ 13
+  " set guifont=Inconsolata\ for\ Powerline\ Bold\ 12  " my dps is a bit messed up
 endif
 
 " Use limelight together with Goyo... (writing tex...)
@@ -72,7 +78,9 @@ autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
 
 " Color Scheme
-colorscheme jellybeans
+colorscheme seoul256-light
+" colorscheme nemo-light, seoul256-light, seoul-256, materialbox
+" colorscheme jellybeans
 
 " Default Formatting and Indenting
 syntax on
@@ -132,15 +140,14 @@ let g:pymode_indent = 0  " Make sure pep8-indent gets to do its thing
 noremap <silent> <F8> :nohl<CR> 
 inoremap <silent> <F8> <C-o>:nohl<CR>
 
-vnoremap <silent> <F6> :s/"[^"]*"/\=substitute(submatch(0), ' ', '^', 'g')/g<CR>gvgwvap:s/"[^"]*"/\=substitute(submatch(0), '\^', ' ', 'g')/g<CR>:nohl<CR>
-vnoremap <silent> <F7> :s/'[^']*'/\=substitute(submatch(0), ' ', '^', 'g')/g<CR>gvgwvap:s/'[^']*'/\=substitute(submatch(0), '\^', ' ', 'g')/g<CR>:nohl<CR>
+" vnoremap <silent> <F6> :s/"[^"]*"/\=substitute(submatch(0), ' ', '^', 'g')/g<CR>gvgwvap:s/"[^"]*"/\=substitute(submatch(0), '\^', ' ', 'g')/g<CR>:nohl<CR>
+" vnoremap <silent> <F7> :s/'[^']*'/\=substitute(submatch(0), ' ', '^', 'g')/g<CR>gvgwvap:s/'[^']*'/\=substitute(submatch(0), '\^', ' ', 'g')/g<CR>:nohl<CR>
 
 " Insert python debug point after:
 " map <C-x> oimport IPython; IPython.embed(); import sys; sys.exit()<Esc>
 " imap <C-x> import IPython; IPython.embed(); import sys; sys.exit()<CR>
-
-map <C-x> oimport inspect, IPython, sys; print("\nDebug {}:{} in {}()\n".format(*inspect.stack()[0][1:4])); IPython.embed(); sys.exit()  # NOQA<Esc>
-imap <C-x> import inspect, IPython, sys; print("\nDebug {}:{} in {}()\n".format(*inspect.stack()[0][1:4])); IPython.embed(); sys.exit()  # NOQA<CR>
+map <C-x> oimport debug<CR>debug.embed(globals())<CR><ESC>
+imap <C-x> import debug<CR>debug.embed(globals())<CR>
 
 " Disable Q - most of my vim accidents happen when I hit q
 map Q <Nop>
@@ -236,6 +243,17 @@ endfunction
 
 nnoremap <buffer> <Home> ^
 inoremap <buffer> <Home> <Esc>^i
+nmap X 0D
+
+" open, push and close...
+python import vim
+nmap <F4> :python py_link = open('/home/areid/.py_link', 'w')<CR>
+nmap <F5> :python py_link.write(vim.current.line + "\n"); py_link.flush()<CR>
+vmap <F5> y:python py_link.write("%paste\nglobals().update(locals())\n"); py_link.flush()<CR>
+nmap <F6> :python py_link.close()<CR>
+" imap <F5> <Esc>Y:silent exec "!./push"<CR>i
+" nmap <F5> Y:silent exec "!./push"<CR>
+" vmap <F5> y:silent exec "!./push"<CR>
 
 " More Tex configuration
 let g:tex_flavor='latex'

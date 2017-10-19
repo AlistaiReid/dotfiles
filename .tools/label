@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 # Don't forget zshrc DISABLE_AUTO_TITLE="true"
+# also dont forget: ipython profile create, c.TerminalInteractiveShell.term_title = False
 echo -ne "\033]0;»$1\007"
