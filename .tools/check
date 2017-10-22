@@ -1,4 +1,4 @@
 #!/usr/bin/bash
 py.test --cov=$(basename $PWD) -s tests
 py.test --flake8 -p no:regtest --cache-clear $(basename $PWD)
-mypy ./$(basename $PWD)
+# mypy ./$(basename $PWD)
