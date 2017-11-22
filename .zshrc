@@ -2,6 +2,7 @@
 export ZSH=$HOME/.oh-my-zsh
 export LC_ALL="en_US.UTF-8"
 export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/bin/core_perl"
+source ~/.private
 plugins=(git)
 
 
@@ -165,3 +166,5 @@ workon tensorflow
 # do something with $PWD
 
 alias debug='tee --output-error > ~/.py_link | python'  # run python, duplicating stdin to vim connection
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

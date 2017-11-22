@@ -1,12 +1,23 @@
 #!/bin/sh
 set -e
-read -p "Numpy version [1.11.2]: " NUMPY_VERSION
-NUMPY_VERSION=${NUMPY_VERSION:-'1.11.2'}
-read -p "Scipy version [0.18.1]: " SCIPY_VERSION
-SCIPY_VERSION=${SCIPY_VERSION:-'0.18.1'}
-read -p "Number of build cores [1]:" BUILD_CPUS
-BUILD_CPUS=${BUILD_CPUS:-'1'}
+WD=$(pwd)
+PYTHON_DEFAULT='3'
+NUMPY_DEFAULT='1.13.3'
+SCIPY_DEFAULT='1.0.0'
+CPUS_DEFAULT='1'
+read -p "Python version [${PYTHON_DEFAULT}]: " PYTHON_VERSION
+PYTHON_VERSION=${PYTHON_VERSION:-$PYTHON_DEFAULT}
+read -p "Numpy version [${NUMPY_DEFAULT}]: " NUMPY_VERSION
+NUMPY_VERSION=${NUMPY_VERSION:-$NUMPY_DEFAULT}
+read -p "Scipy version [${SCIPY_DEFAULT}]: " SCIPY_VERSION
+SCIPY_VERSION=${SCIPY_VERSION:-$SCIPY_DEFAULT}
+read -p "Number of build cores [${CPUS_DEFAULT}]:" BUILD_CPUS
+BUILD_CPUS=${BUILD_CPUS:-$CPUS_DEFAULT}
 
+PIP='pip'$PYTHON_VERSION
+PYTHON='python'$PYTHON_VERSION
+
+echo "Using ${PYTHON} and ${PIP}"
 echo "Numpy $NUMPY_VERSION, Scipy $SCIPY_VERSION, no. build cores $BUILD_CPUS."
 
 if ! [[ -z "${VIRTUAL_ENV// }" ]]; then
@@ -23,7 +34,8 @@ fi
 
 echo "Installing cython and openblas"
 pacaur -S --needed openblas-lapack
-pip install cython
+# pacaur -S --needed atlas-lapack
+${PIP} install cython
 
 # Somehow each version of numpy/scipy have different archive formats...
 # http://askubuntu.com/questions/57981/command-line-archive-manager-extracter
@@ -56,24 +68,46 @@ export LDFLAGS="$LDFLAGS -shared"
 echo "Building and installing Numpy $NUMPY_VERSION"
 mkdir -p /tmp/src
 cd /tmp/src
-pip3 download --no-binary :all: numpy==${NUMPY_VERSION}
+${PIP} download --no-binary :all: numpy==${NUMPY_VERSION}
 extract numpy-${NUMPY_VERSION}.*
 cd /tmp/src/numpy-${NUMPY_VERSION}
-# curl -o site.cfg https://raw.githubusercontent.com/determinant-io/manifold-docker/develop/inference/numpy.site.cfg\?token\=add9zmv7g7nnnj_rbg_qwldnwpihie3rks5yfbgxwa%3d%3d
-cp ~/.tools/numpy.site.cfg ./site.cfg
-python3 setup.py config_fc --fcompiler=gnu95 build -j ${BUILD_CPUS}
-python3 setup.py install --optimize=1
+
+# write config file
+cat > site.cfg <<- EOM
+[ALL]
+include_dirs = /usr/include/openblas
+library_dirs = /usr/lib
+
+[openblas]
+openblas_libs = openblas
+library_dirs = /usr/lib
+
+[lapack]
+lapack_libs = openblas
+library_dirs = /usr/lib
+EOM
+
+${PYTHON} setup.py config_fc --fcompiler=gnu95 build -j ${BUILD_CPUS}
+${PYTHON} setup.py bdist_wheel
+cp dist/*.whl $WD
 
 # SCIPY
 echo "Building and installing Scipy $SCIPY_VERSION"
 cd /tmp/src
-pip3 download --no-binary :all: scipy==${SCIPY_VERSION}
+${PIP} download --no-binary :all: scipy==${SCIPY_VERSION}
 extract scipy-${SCIPY_VERSION}.*
 cd /tmp/src/scipy-${SCIPY_VERSION}
-cp ~/.tools/scipy.site.cfg ./site.cfg
-# curl -o site.cfg https://raw.githubusercontent.com/determinant-io/manifold-docker/develop/inference/scipy.site.cfg?token=ADD9zEqw38ciR4Nfhx_7V7N4e-zO7oocks5YfBU8wA%3D%3D
-# python3 setup.py config_fc --fcompiler=gnu95 build -j4 # Fails on Arch!
-python3 setup.py config_fc --fcompiler=gnu95 build
-python3 setup.py install --optimize=1
+
+# write config file
+cat > site.cfg <<- EOM
+[openblas]
+library_dirs = /usr/lib
+EOM
+
+# python3 setup.py config_fc --fcompiler=gnu95 build -j ${BUILD_CPUS} # Fails on Arch
+${PYTHON} setup.py config_fc --fcompiler=gnu95 build
+${PYTHON} setup.py bdist_wheel
+cp dist/*.whl $WD
+
 
 echo "All done!"
