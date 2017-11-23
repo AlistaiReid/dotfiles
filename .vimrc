@@ -12,10 +12,11 @@ endif
 " List of active plugins
 call plug#begin('~/.vim/plugged')
     Plug 'scrooloose/nerdtree'            " Tree based file browser (ctrl-f)
+    Plug 'jeetsukumaran/vim-indentwise'   " Nice movement between indents [%
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'               " Advanced file searching
     Plug 'rafi/awesome-vim-colorschemes'  " Many colourschemes
-    Plug 'takac/vim-hardtime'             " force learning by blocking repeats
+    " Plug 'takac/vim-hardtime'             " force learning by blocking repeats
     Plug 'jnurmine/Zenburn'               " Nice dark one
     Plug 'tpope/vim-eunuch'               " for :SudoWrite :Rename
     Plug 'itchyny/lightline.vim'          " Status line
@@ -84,20 +85,23 @@ set ssop-=folds           " this vimrc file to apply to old sessions.
 set equalalways           " Keep splits the same size
 set autochdir             " Make vim automatically change dir to buffer's dir
 set showtabline=2         " always show tabline
-set tw=100                " Wait 0.1 seconds for key combo (default is 1!)
-let mapleader = ";"       " Default leader is too far
+let mapleader = " "       " Default leader is too far
 let g:fzf_command_prefix = 'Fzf'
 let g:pymode_indent = 0   " Make sure pep8-indent gets to do its thing
 let g:tex_flavor='latex'  " Formatting style.
+set timeout               " Key mappings go away after a little while
+set tw=100                " Wait 0.1 seconds for key combo (default is 1!)
+set completeopt=menuone,noselect,noinsert
 
-" Vim-hardtime
-let g:hardtime_default_on = 1  " Hard time on every buffer
-let g:list_of_normal_keys = ["h", "j", "k", "l"]
-let g:list_of_visual_keys = ["h", "j", "k", "l"]
-let g:list_of_insert_keys = ["<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
-let g:hardtime_maxcount = 2   " allow two presses (default is 1)
-let g:hardtime_timeout = 1000  " punishment time (ms)
-let g:list_of_disabled_keys = []
+" " Vim-hardtime
+" let g:hardtime_maxcount=1   " allow two presses (default is 1)
+" let g:hardtime_timeout=100  " punishment time (ms)
+" let g:hardtime_allow_different_key=1
+" let g:hardtime_default_on = 1  " Hard time on every buffer
+" let g:list_of_normal_keys = ["h", "l"]
+" let g:list_of_visual_keys = ["h", "l"]
+" let g:list_of_insert_keys = ["<UP>", "<DOWN>"]
+" let g:list_of_disabled_keys = []
 
 " " Tex-specific configuration
 " augroup ft_tex
@@ -115,10 +119,9 @@ let g:list_of_disabled_keys = []
 "     au FileType tex setlocal iskeyword+=: 
 " augroup END
 
-" Completor plugin - hook up tab
-inoremap <expr> <j> pumvisible() ? "\<C-y>\<cr>" : "\j"
-inoremap <expr> <Tab> pumvisible() ? "\<C-y>\<cr>" : "\<Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+" completor using ctrl-j and ctrl-k with auto-close.
+inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 
 " NERDTree file browser
@@ -143,36 +146,37 @@ let g:lightline = {
 		\ },
 	\ }
 
-" Make tmp dirs in standard places
 set nobackup
-set noswapfile
-set undodir=~/.tmp,~/tmp,/var/tmp,/tmp
-set directory=~/.tmp,~/tmp,/var/tmp,/tmp
+set noundofile
+" If vim crashes, use recovery mode: vim -r filename
+set dir=~/.vim/swap/
+set swapfile
 
-" Custom Ag
+" Custom fzf#Ag
 command! -bang -nargs=* FzfAu call fzf#vim#grep('ag --nogroup --color -G ".*py$" ".$" ~/code/glabrezu/glabrezu ~/code/dretch/dretch ~/code/modron/modron', 0)
 
 """ Custom key-maps:
-map f <Plug>(easymotion-f)
-map F <Plug>(easymotion-F)
+map <leader>f <Plug>(easymotion-f)
+map <leader>F <Plug>(easymotion-F)
 nnoremap <silent> <leader>n :FzfFiles<CR>
 nnoremap <silent> <leader>b :FzfBuffers<CR>
 nnoremap <silent> <leader>l :FzfLines<CR>
 nnoremap <silent> <leader>a :FzfAu<CR>
-nnoremap <silent> <F2> <Plug>(ale_previous)
-nnoremap <silent> <F3> <Plug>(ale_next)
 nnoremap <silent> <C-f> :NERDTree <CR>
 map <C-x> oimport debug<CR>debug.embed(locals(), globals(), False)<CR><ESC>
 imap <C-x> import debug<CR>debug.embed(locals(), globals(), False)<CR>
 imap <Esc> <Nop>
 nmap q :nohl<CR>
 vmap x "_d
-nnoremap <S-Enter> O<Esc><Down>
-nnoremap <Enter> o<Esc><Up>
-nnoremap <Space> f<Space>
-nnoremap <S-Space> F<Space>
-" nnoremap <Space> a<Space><esc><Left>
-" nnoremap <S-Space> i<Space><esc><Right>
+" nnoremap <Space> f<Space>
+" nnoremap <S-Space> F<Space>
+" nnoremap <S-Enter> O<Esc><Down>
+" nnoremap <Enter> o<Esc><Up>
+nnoremap <leader>l a<Space><esc><Left>
+nnoremap <leader>h i<Space><esc><Right>
+nnoremap <leader>k O<Esc><Down>
+nnoremap <leader>j o<Esc><Up>
+
 nnoremap L :bn<CR>
 nnoremap H :bp<CR>
 nmap <Tab> >>
@@ -183,19 +187,28 @@ map gs '[V']
 inoremap jk <esc>
 nnoremap K :SudoWrite<CR>
 nmap <silent> <A-w> :Bdelete<CR>
-nmap <silent> <A-c> :wincmd c<CR>
-nmap <silent> <A-s> :vsplit<CR>
-nmap <silent> <A-=> :wincmd =<CR>
-nmap <silent> <A-Up> :wincmd k<CR>
-nmap <silent> <A-Down> :wincmd j<CR>
-nmap <silent> <A-Left> :wincmd h<CR>
-nmap <silent> <A-Right> :wincmd l<CR>
+nmap <silent> <C-c> :wincmd c<CR>
+nmap <silent> <C-s> :vsplit<CR>
+nmap <silent> <C-=> :wincmd =<CR>
+nmap <silent> <C-k> :wincmd k<CR>
+nmap <silent> <C-j> :wincmd j<CR>
+nmap <silent> <C-h> :wincmd h<CR>
+nmap <silent> <C-l> :wincmd l<CR>
+nmap X 0D
+
+" Normal mode only alow up/down
+" left takes you to beginning of line
+nnoremap h ^
+" right takes you to end of line (pre-comment)
+nnoremap l $F#hbe
 nnoremap <Up>  <NOP>
 nnoremap <Down> <NOP>
 nnoremap <Left>  <NOP>
 nnoremap <Right> <NOP>
-nnoremap gh ^
-nmap X 0D
+
+" Insert mode we shouldnt be going up and down
+inoremap <Up> <NOP>
+inoremap <Down> <NOP>
 
 " {experimental} open, push and close...
 python import vim
@@ -208,3 +221,16 @@ nmap <F6> :python py_link.close()<CR>
 set textwidth=79          " Line width (pep syntax check)
 imap +- ±
 let g:EasyMotion_keys='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+
+" Fancy movement
+map ( <Plug>(IndentWisePreviousLesserIndent)
+map ) <Plug>(IndentWiseNextGreaterIndent)
+map <C-[> <Plug>(IndentWisePreviousEqualIndent)
+map <C-]> <Plug>(IndentWiseNextEqualIndent)
+
+" Navigate errors
+nnoremap <silent> <F2> <Plug>(ale_previous_wrap)
+nnoremap <silent> <F3> <Plug>(ale_next_wrap)
+nnoremap <silent> <F7> <Plug>(ale_previous_wrap)
+nnoremap <silent> <F8> <Plug>(ale_next_wrap)
+
