@@ -55,42 +55,43 @@ let &runtimepath.=',~/.vim/bundle/ale'
 " Default Formatting and Indenting
 syntax on
 filetype plugin indent on
-set foldmethod=manual     " Don't fold up (see zf)
-set clipboard=unnamedplus " System clipboard default
-set textwidth=79          " Line width (pep syntax check)
-set shiftwidth=4          " operation >> indents 4 columns etc
-set tabstop=4             " a hard TAB displays as 4 columns
-set expandtab             " insert spaces when hitting TABs
-set softtabstop=4         " insert/delete 4 spaces when hitting a TAB/BACKSPACE
-set noshiftround          " don't round indent to multiple of 'shiftwidth'
-set autoindent            " align the new line indent with the previous line
-set smarttab              " tab width determined by shiftwidth
-set hidden                " You can switch buffers without saving
-set matchpairs+=<:>       " more pairs we can use, for html etc
-set matchtime=2           " 0.2 seconds
-set hlsearch              " hilight search results (F8 to un-hilight)
-set whichwrap+=[]<>hl     " link lines by left/right to prev/next line.
-set nowrap                " let lines go off edge of screen
-set formatoptions-=t      " dont actually force a newline unless wrapping with gw
-set formatoptions-=cro    " dont comment on next line
-set lazyredraw            " don't redraw whilst running macros
-set colorcolumn=80        " Show that last column
-set scrolloff=10          " How close can you get to the edge without scrolling
-set number                " display line numbers
-set laststatus=2          " Make sure status line always shows
-set shortmess=ITA         " No Intro, Truncate short messages, Abbreviate
-set incsearch             " Incremental search
-set ssop-=options         " Don't save settings in a session - allows changes to
-set ssop-=folds           " this vimrc file to apply to old sessions.
-set equalalways           " Keep splits the same size
-set autochdir             " Make vim automatically change dir to buffer's dir
-set showtabline=2         " always show tabline
-let mapleader = " "       " Default leader is too far
+set foldmethod=manual       " Don't fold up (see zf)
+set clipboard=unnamedplus   " System clipboard default
+set textwidth=79            " Line width (pep syntax check)
+set shiftwidth=4            " operation >> indents 4 columns etc
+set tabstop=4               " a hard TAB displays as 4 columns
+set expandtab               " insert spaces when hitting TABs
+set softtabstop=4           " insert/delete 4 spaces when hitting a TAB/BACKSPACE
+set shiftround              " don't round indent to multiple of 'shiftwidth'
+set autoindent              " align the new line indent with the previous line
+set smarttab                " tab width determined by shiftwidth
+set hidden                  " You can switch buffers without saving
+set matchpairs+=<:>         " more pairs we can use, for html etc
+set matchtime=2             " 0.2 seconds
+set hlsearch                " hilight search results (F8 to un-hilight)
+set whichwrap+=[]<>hl       " link lines by left/right to prev/next line.
+set nowrap                  " let lines go off edge of screen
+set formatoptions-=t        " dont actually force a newline unless wrapping with gw
+set formatoptions=
+" set formatoptions-=cro      " dont comment on next line
+set lazyredraw              " don't redraw whilst running macros
+set colorcolumn=80          " Show that last column
+set scrolloff=80            " How close can you get to the edge without scrolling
+set number                  " display line numbers
+set laststatus=2            " Make sure status line always shows
+set shortmess=ITA           " No Intro, Truncate short messages, Abbreviate
+set incsearch               " Incremental search
+set ssop-=options           " Don't save settings in a session - allows changes to
+set ssop-=folds             " this vimrc file to apply to old sessions.
+set equalalways             " Keep splits the same size
+set autochdir               " Make vim automatically change dir to buffer's dir
+set showtabline=2           " always show tabline
+let mapleader =             " "       " Default leader is too far
 let g:fzf_command_prefix = 'Fzf'
-let g:pymode_indent = 0   " Make sure pep8-indent gets to do its thing
-let g:tex_flavor='latex'  " Formatting style.
-set timeout               " Key mappings go away after a little while
-set tw=100                " Wait 0.1 seconds for key combo (default is 1!)
+let g:pymode_indent = 0     " Make sure pep8-indent gets to do its thing
+let g:tex_flavor='latex'    " Formatting style.
+set timeout                 " Key mappings go away after a little while
+set tw=100                  " Wait 0.1 seconds for key combo (default is 1!)
 set completeopt=menuone,noselect,noinsert
 
 " " Vim-hardtime
@@ -153,11 +154,16 @@ set dir=~/.vim/swap/
 set swapfile
 
 " Custom fzf#Ag
-command! -bang -nargs=* FzfAu call fzf#vim#grep('ag --nogroup --color -G ".*py$" ".$" ~/code/glabrezu/glabrezu ~/code/dretch/dretch ~/code/modron/modron', 0)
+" command! -bang -nargs=* FzfAu call fzf#vim#grep('ag --nogroup --color -G ".*py$" ".$" ~/code/glabrezu/glabrezu ~/code/dretch/dretch ~/code/modron/modron', 0)
+" ripgrep is beast!
+" command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number . ../ ~/code/glabrezu/glabrezu ~/code/dretch/dretch ~/code/modron/modron', 0)
+command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number . ~/code/', 0)
 
-""" Custom key-maps:
+""" Quicker assisted find (usually leader-leader):
 map <leader>f <Plug>(easymotion-f)
 map <leader>F <Plug>(easymotion-F)
+
+" {n}ame, {b}uffers, {l}ines, {a}g
 nnoremap <silent> <leader>n :FzfFiles<CR>
 nnoremap <silent> <leader>b :FzfBuffers<CR>
 nnoremap <silent> <leader>l :FzfLines<CR>
@@ -167,7 +173,7 @@ map <C-x> oimport debug<CR>debug.embed(locals(), globals(), False)<CR><ESC>
 imap <C-x> import debug<CR>debug.embed(locals(), globals(), False)<CR>
 imap <Esc> <Nop>
 nmap q :nohl<CR>
-vmap x "_d
+" vmap x "_d
 " nnoremap <Space> f<Space>
 " nnoremap <S-Space> F<Space>
 " nnoremap <S-Enter> O<Esc><Down>
@@ -176,7 +182,6 @@ nnoremap <leader>l a<Space><esc><Left>
 nnoremap <leader>h i<Space><esc><Right>
 nnoremap <leader>k O<Esc><Down>
 nnoremap <leader>j o<Esc><Up>
-
 nnoremap L :bn<CR>
 nnoremap H :bp<CR>
 nmap <Tab> >>
@@ -186,21 +191,25 @@ vmap <s-tab> <gv
 map gs '[V']
 inoremap jk <esc>
 nnoremap K :SudoWrite<CR>
-nmap <silent> <A-w> :Bdelete<CR>
-nmap <silent> <C-c> :wincmd c<CR>
-nmap <silent> <C-s> :vsplit<CR>
-nmap <silent> <C-=> :wincmd =<CR>
-nmap <silent> <C-k> :wincmd k<CR>
-nmap <silent> <C-j> :wincmd j<CR>
-nmap <silent> <C-h> :wincmd h<CR>
-nmap <silent> <C-l> :wincmd l<CR>
+inoremap <C-w> <NOP>
+nmap <silent> <C-c> :Bdelete<CR>
+nmap <silent> <C-w> :wincmd c<CR>
+nmap <silent> <A-s> :vsplit<CR>
+nmap <silent> <A-=> :wincmd =<CR>
+nmap <silent> <A-k> :wincmd k<CR>
+nmap <silent> <A-j> :wincmd j<CR>
+nmap <silent> <A-h> :wincmd h<CR>
+nmap <silent> <A-l> :wincmd l<CR>
 nmap X 0D
 
 " Normal mode only alow up/down
 " left takes you to beginning of line
 nnoremap h ^
+vnoremap h ^
+nnoremap l $F#ge
+vnoremap l $F#ge
+
 " right takes you to end of line (pre-comment)
-nnoremap l $F#hbe
 nnoremap <Up>  <NOP>
 nnoremap <Down> <NOP>
 nnoremap <Left>  <NOP>
@@ -218,7 +227,6 @@ vmap <F5> y:python py_link.write("%paste\nglobals().update(locals())\n"); py_lin
 nmap <F6> :python py_link.close()<CR>
 
 " A plugin is unsetting this:
-set textwidth=79          " Line width (pep syntax check)
 imap +- ±
 let g:EasyMotion_keys='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 
@@ -229,8 +237,6 @@ map <C-[> <Plug>(IndentWisePreviousEqualIndent)
 map <C-]> <Plug>(IndentWiseNextEqualIndent)
 
 " Navigate errors
-nnoremap <silent> <F2> <Plug>(ale_previous_wrap)
-nnoremap <silent> <F3> <Plug>(ale_next_wrap)
-nnoremap <silent> <F7> <Plug>(ale_previous_wrap)
-nnoremap <silent> <F8> <Plug>(ale_next_wrap)
+nnoremap <silent> <Enter> <Plug>(ale_previous_wrap)
+nnoremap <silent> <S-Enter> <Plug>(ale_next_wrap)
 
