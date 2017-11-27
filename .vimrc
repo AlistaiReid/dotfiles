@@ -12,6 +12,7 @@ endif
 " List of active plugins
 call plug#begin('~/.vim/plugged')
     Plug 'scrooloose/nerdtree'            " Tree based file browser (ctrl-f)
+    Plug 'bkad/CamelCaseMotion'           " Break CamelCase into words.
     Plug 'jeetsukumaran/vim-indentwise'   " Nice movement between indents [%
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'               " Advanced file searching
@@ -157,7 +158,7 @@ set swapfile
 " command! -bang -nargs=* FzfAu call fzf#vim#grep('ag --nogroup --color -G ".*py$" ".$" ~/code/glabrezu/glabrezu ~/code/dretch/dretch ~/code/modron/modron', 0)
 " ripgrep is beast!
 " command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number . ../ ~/code/glabrezu/glabrezu ~/code/dretch/dretch ~/code/modron/modron', 0)
-command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number . ~/code/', 0)
+command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number .$ ~/code/', 0)
 
 """ Quicker assisted find (usually leader-leader):
 map <leader>f <Plug>(easymotion-f)
@@ -204,27 +205,30 @@ nmap X 0D
 
 " Normal mode only alow up/down
 " left takes you to beginning of line
-nnoremap h ^
-vnoremap h ^
-nnoremap l $F#ge
-vnoremap l $F#ge
+" nnoremap h ^
+" vnoremap h ^
+" nnoremap l $F#ge
+" vnoremap l $F#ge
 
-" right takes you to end of line (pre-comment)
+" Normal mode - only up and down and targeted motions
+nnoremap h <NOP>
+nnoremap l <NOP>
 nnoremap <Up>  <NOP>
 nnoremap <Down> <NOP>
 nnoremap <Left>  <NOP>
 nnoremap <Right> <NOP>
 
-" Insert mode we shouldnt be going up and down
+" Insert mode - only left, right for spelling correction
 inoremap <Up> <NOP>
 inoremap <Down> <NOP>
 
 " {experimental} open, push and close...
-python import vim
-nmap <F4> :python py_link = open('/home/areid/.py_link', 'w')<CR>
-nmap <F5> :python py_link.write(vim.current.line + "\n"); py_link.flush()<CR>
-vmap <F5> y:python py_link.write("%paste\nglobals().update(locals())\n"); py_link.flush()<CR>
-nmap <F6> :python py_link.close()<CR>
+nmap <F8> :source ~/.vimrc<CR>
+" python import vim
+" nmap <F4> :python py_link = open('/home/areid/.py_link', 'w')<CR>
+" nmap <F5> :python py_link.write(vim.current.line + "\n"); py_link.flush()<CR>
+" vmap <F5> y:python py_link.write("%paste\nglobals().update(locals())\n"); py_link.flush()<CR>
+" nmap <F6> :python py_link.close()<CR>
 
 " A plugin is unsetting this:
 imap +- ±
@@ -240,3 +244,12 @@ map <C-]> <Plug>(IndentWiseNextEqualIndent)
 nnoremap <silent> <Enter> <Plug>(ale_previous_wrap)
 nnoremap <silent> <S-Enter> <Plug>(ale_next_wrap)
 
+" CamelCase Motion
+map <silent> w <Plug>CamelCaseMotion_w
+map <silent> b <Plug>CamelCaseMotion_b
+map <silent> e <Plug>CamelCaseMotion_e
+map <silent> ge <Plug>CamelCaseMotion_ge
+sunmap w
+sunmap b
+sunmap e
+sunmap ge
