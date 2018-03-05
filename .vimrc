@@ -13,16 +13,13 @@ endif
 call plug#begin('~/.vim/plugged')
     Plug 'scrooloose/nerdtree'            " Tree based file browser (ctrl-f)
     Plug 'bkad/CamelCaseMotion'           " Break CamelCase into words.
-    Plug 'jeetsukumaran/vim-indentwise'   " Nice movement between indents [%
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'               " Advanced file searching
-    Plug 'rafi/awesome-vim-colorschemes'  " Many colourschemes
-    " Plug 'takac/vim-hardtime'             " force learning by blocking repeats
     Plug 'jnurmine/Zenburn'               " Nice dark one
     Plug 'tpope/vim-eunuch'               " for :SudoWrite :Rename
     Plug 'itchyny/lightline.vim'          " Status line
     Plug 'taohex/lightline-buffer'        " Buffer navigate
-    Plug 'junegunn/limelight.vim'         " Hilight current paragraph
+    " Plug 'junegunn/limelight.vim'         " Hilight current paragraph
     Plug 'moll/vim-bbye'                  " Soft buffer close
     Plug 'easymotion/vim-easymotion'      " hilights your motions with \\
     Plug 'justinmk/vim-sneak'             " Sneak to character pair with s/z{ab}
@@ -38,6 +35,8 @@ set noerrorbells visualbell t_vb=
 autocmd GUIEnter * set visualbell t_vb=
 silent! helptags ALL
 
+set noshowmode  " its already shown by lightline
+
 " Gui Settings 
 if has('gui_running')
   set guioptions-=T  " no toolbar
@@ -47,11 +46,20 @@ if has('gui_running')
   set guifont=Inconsolata\ Regular\ 14
 endif
 
+" Attempt to make esk/jk more responsive
+:set esckeys
+set ttimeoutlen=0
+set timeoutlen=1000
+" set timeout                 " Key mappings go away after a little while
+" set tw=100                  " Wait 0.1 seconds for key combo (default is 1!)
+
 " Color Scheme: Zenburn, seoul256, seoul256-light, jellybeans
 colorscheme zenburn
 
 " Linting setup:
 let &runtimepath.=',~/.vim/bundle/ale'
+let g:ale_lint_on_text_changed='normal'
+let g:ale_lint_on_insert_leave=1
 
 " Default Formatting and Indenting
 syntax on
@@ -68,7 +76,8 @@ set autoindent              " align the new line indent with the previous line
 set smarttab                " tab width determined by shiftwidth
 set hidden                  " You can switch buffers without saving
 set matchpairs+=<:>         " more pairs we can use, for html etc
-set matchtime=2             " 0.2 seconds
+set noshowmatch             " don't freeze up trying to find a match.
+" set matchtime=2             " 0.2 seconds
 set hlsearch                " hilight search results (F8 to un-hilight)
 set whichwrap+=[]<>hl       " link lines by left/right to prev/next line.
 set nowrap                  " let lines go off edge of screen
@@ -91,9 +100,7 @@ let mapleader =             " "       " Default leader is too far
 let g:fzf_command_prefix = 'Fzf'
 let g:pymode_indent = 0     " Make sure pep8-indent gets to do its thing
 let g:tex_flavor='latex'    " Formatting style.
-set timeout                 " Key mappings go away after a little while
-set tw=100                  " Wait 0.1 seconds for key combo (default is 1!)
-set completeopt=menuone,noselect,noinsert
+set completeopt=menuone  " ,noselect,noinsert
 
 " " Vim-hardtime
 " let g:hardtime_maxcount=1   " allow two presses (default is 1)
@@ -121,17 +128,22 @@ set completeopt=menuone,noselect,noinsert
 "     au FileType tex setlocal iskeyword+=: 
 " augroup END
 
-" completor using ctrl-j and ctrl-k with auto-close.
-inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 
+inoremap jk <Esc><Esc>:SudoWrite<CR>
+inoremap kj <Esc><Esc>:SudoWrite<CR>
+inoremap jK <Esc><Esc>:SudoWrite<CR>
+inoremap JK <Esc><Esc>:SudoWrite<CR>
+inoremap Jk <Esc><Esc>:SudoWrite<CR>
+"
+" inoremap jk <Esc><Esc>  " Doesnt like popups
+" inoremap <expr> jk pumvisible() ? "<Esc><Esc>" : "<Esc>"
 " NERDTree file browser
 let g:NERDTreeQuitOnOpen = 1
 
 " use lightline-buffer in lightline
 let g:lightline = {
-	\ 'tabline': {
+	\ 'colorscheme': 'wombat',
+    \ 'tabline': {
 		\ 'left': [ [ 'bufferinfo' ], [ 'bufferbefore', 'buffercurrent', 'bufferafter' ], ],
 		\ 'right': [ [ 'close' ], ],
 		\ },
@@ -170,19 +182,31 @@ nnoremap <silent> <leader>b :FzfBuffers<CR>
 nnoremap <silent> <leader>l :FzfLines<CR>
 nnoremap <silent> <leader>a :FzfAu<CR>
 nnoremap <silent> <C-f> :NERDTree <CR>
-map <C-x> oimport debug<CR>debug.embed(locals(), globals(), False)<CR><ESC>
-imap <C-x> import debug<CR>debug.embed(locals(), globals(), False)<CR>
+
+
+" completor using ctrl-j and ctrl-k with auto-close. <C-n>=Down, <C-p>
+inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : ""
+inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : ""
+inoremap <C-Space> <Enter><Esc>
+autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+nnoremap <C-k> a<C-x>s
+
+nnoremap <C-x> oimport debug<CR>debug.embed(locals(), globals(), False)<CR><ESC>
+inoremap <C-x> import debug<CR>debug.embed(locals(), globals(), False)<CR>
+
 imap <Esc> <Nop>
-nmap q :nohl<CR>
+nnoremap q :nohl<CR>
+nnoremap Q lD
 " vmap x "_d
 " nnoremap <Space> f<Space>
 " nnoremap <S-Space> F<Space>
-" nnoremap <S-Enter> O<Esc><Down>
-" nnoremap <Enter> o<Esc><Up>
-nnoremap <leader>l a<Space><esc><Left>
-nnoremap <leader>h i<Space><esc><Right>
-nnoremap <leader>k O<Esc><Down>
-nnoremap <leader>j o<Esc><Up>
+nnoremap <S-Enter> O<Esc><Down>
+nnoremap <Enter> o<Esc><Up>
+" nnoremap <C-h> a<Space><esc><Left>
+" nnoremap <C-l> i<Space><esc><Right>
+" nnoremap <C-j> O<Esc><Down>
+" nnoremap <C-k> o<Esc><Up>
+
 nnoremap L :bn<CR>
 nnoremap H :bp<CR>
 nmap <Tab> >>
@@ -190,7 +214,6 @@ nmap <S-Tab> <<
 vmap <Tab> >gv
 vmap <s-tab> <gv
 map gs '[V']
-inoremap jk <esc>
 nnoremap K :SudoWrite<CR>
 inoremap <C-w> <NOP>
 nmap <silent> <C-c> :Bdelete<CR>
@@ -203,24 +226,17 @@ nmap <silent> <A-h> :wincmd h<CR>
 nmap <silent> <A-l> :wincmd l<CR>
 nmap X 0D
 
-" Normal mode only alow up/down
-" left takes you to beginning of line
-" nnoremap h ^
-" vnoremap h ^
-" nnoremap l $F#ge
-" vnoremap l $F#ge
-
 " Normal mode - only up and down and targeted motions
-nnoremap h <NOP>
-nnoremap l <NOP>
+" nnoremap h <NOP>
+" nnoremap l <NOP>
 nnoremap <Up>  <NOP>
 nnoremap <Down> <NOP>
 nnoremap <Left>  <NOP>
 nnoremap <Right> <NOP>
 
 " Insert mode - only left, right for spelling correction
-inoremap <Up> <NOP>
-inoremap <Down> <NOP>
+" inoremap <Up> <NOP>
+" inoremap <Down> <NOP>
 
 " {experimental} open, push and close...
 nmap <F8> :source ~/.vimrc<CR>
@@ -235,14 +251,15 @@ imap +- ±
 let g:EasyMotion_keys='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 
 " Fancy movement
-map ( <Plug>(IndentWisePreviousLesserIndent)
-map ) <Plug>(IndentWiseNextGreaterIndent)
-map <C-[> <Plug>(IndentWisePreviousEqualIndent)
-map <C-]> <Plug>(IndentWiseNextEqualIndent)
+" nmap ( <Plug>(IndentWisePreviousLesserIndent)
+" nmap ) <Plug>(IndentWiseNextGreaterIndent)
+" map <C-[> <Plug>(IndentWisePreviousEqualIndent)
+" map <C-]> <Plug>(IndentWiseNextEqualIndent)
 
 " Navigate errors
-nnoremap <silent> <Enter> <Plug>(ale_previous_wrap)
-nnoremap <silent> <S-Enter> <Plug>(ale_next_wrap)
+nnoremap <silent> <F2> :lprev<CR>
+nnoremap <silent> <F3> :lnext<CR>
+" nnoremap <silent> <S-Enter> :lopen<CR>
 
 " CamelCase Motion
 map <silent> w <Plug>CamelCaseMotion_w
@@ -253,3 +270,12 @@ sunmap w
 sunmap b
 sunmap e
 sunmap ge
+
+" Some plugin is unsetting this...
+set textwidth=79            " Line width (pep syntax check)
+
+" Don't code-complete english:
+let g:completor_blacklist=['text', 'markdown']
+autocmd FileType text setlocal spell spelllang=en_au
+autocmd FileType text setlocal complete=""
+

@@ -132,16 +132,16 @@ alias pipupg="pip install -U pip && pip freeze | grep -v 'git' | cut -d = -f 1 |
 
 
 alias pacall="LC_ALL=C pacman -Qi | sed -n '/^Name[^:]*: \(.*\)/{s//\1 /;x};/^Installed[^:]*: \(.*\)/{s//\1/;H;x;s/\n//;p}' | sort -nk2 | column -t"
-alias pacupg='pacaur -Syu' # Synchronize with repositories before upgrading packages that are out of date on the local system.
-alias pacin='pacaur -S' # Install specific package(s) from the repositories
+alias pacupg='sudo echo "" && yay -Syu --noconfirm' # Synchronize with repositories before upgrading packages that are out of date on the local system.
+alias pacin='sudo echo "" && yay -S --noconfirm' # Install specific package(s) from the repositories
 alias pacins='sudo pacman -U' # Install specific package not from the repositories but from a file
-alias pacre='pacaur -R' # Remove the specified package(s), retaining its configuration(s) and required dependencies
-alias pacrem='pacaur -Rns' # Remove the specified package(s), its configuration(s) and unneeded dependencies
-alias pacinf='pacaur -Si' # Display information about a given package in the repositories
-alias pacs='pacaur -Ss' # Search for package(s) in the repositories
-alias pacloc='pacaur -Qi' # Display information about a given package in the local database
-alias pacfiles='pacaur -Ql' # list the files from a certain pacagke
-alias paclocs='pacaur -Qs' # Search for package(s) in the local database
+alias pacre='yay -Rc' # Remove the specified package(s), retaining its configuration(s) and required dependencies
+alias pacrem='yay -Rns' # Remove the specified package(s), its configuration(s) and unneeded dependencies
+alias pacinf='yay -Si' # Display information about a given package in the repositories
+alias pacs='yay -Ss' # Search for package(s) in the repositories
+alias pacloc='yay -Qi' # Display information about a given package in the local database
+alias pacfiles='yay -Ql' # list the files from a certain pacagke
+alias paclocs='yay -Qs' # Search for package(s) in the local database
 alias pacupd='sudo pacman -Sy' # Update and refresh the local package and ABS databases against repositories
 alias pacinsd='sudo pacman -S --asdeps' # Install given package(s) as dependencies of another package
 alias pacmir='sudo pacman -Syy' # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist Created by newuser for 5.2
@@ -162,9 +162,18 @@ export MYPYPATH=/home/areid/code/stubs
 export TF_CPP_MIN_LOG_LEVEL=3
 
 label Untitled
-workon tensorflow
+workon scratch
 # do something with $PWD
 
 alias debug='tee --output-error > ~/.py_link | python'  # run python, duplicating stdin to vim connection
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+show(){
+    which "$1"
+    which "$1" | xargs cat
+}
+
+source <(kubectl completion zsh)
+
+export QT_AUTO_SCREEN_SCALE_FACTOR=1
