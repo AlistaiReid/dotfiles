@@ -191,8 +191,8 @@ inoremap <C-Space> <Enter><Esc>
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 nnoremap <C-k> a<C-x>s
 
-nnoremap <C-x> oimport debug<CR>debug.embed(locals(), globals(), False)<CR><ESC>
-inoremap <C-x> import debug<CR>debug.embed(locals(), globals(), False)<CR>
+nnoremap <C-x> oimport debug<CR>debug.embed(locals(), globals())<CR><ESC>
+inoremap <C-x> import debug<CR>debug.embed(locals(), globals())<CR>
 
 imap <Esc> <Nop>
 nnoremap q :nohl<CR>

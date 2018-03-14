@@ -132,8 +132,8 @@ alias pipupg="pip install -U pip && pip freeze | grep -v 'git' | cut -d = -f 1 |
 
 
 alias pacall="LC_ALL=C pacman -Qi | sed -n '/^Name[^:]*: \(.*\)/{s//\1 /;x};/^Installed[^:]*: \(.*\)/{s//\1/;H;x;s/\n//;p}' | sort -nk2 | column -t"
-alias pacupg='sudo echo "" && yay -Syu --noconfirm' # Synchronize with repositories before upgrading packages that are out of date on the local system.
-alias pacin='sudo echo "" && yay -S --noconfirm' # Install specific package(s) from the repositories
+alias pacupg='sudo -v && yay -Syu --noconfirm' # Synchronize with repositories before upgrading packages that are out of date on the local system.
+alias pacin='sudo -v && yay -S --noconfirm' # Install specific package(s) from the repositories
 alias pacins='sudo pacman -U' # Install specific package not from the repositories but from a file
 alias pacre='yay -Rc' # Remove the specified package(s), retaining its configuration(s) and required dependencies
 alias pacrem='yay -Rns' # Remove the specified package(s), its configuration(s) and unneeded dependencies
