@@ -19,7 +19,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-eunuch'               " for :SudoWrite :Rename
     Plug 'itchyny/lightline.vim'          " Status line
     Plug 'taohex/lightline-buffer'        " Buffer navigate
-    " Plug 'junegunn/limelight.vim'         " Hilight current paragraph
     Plug 'moll/vim-bbye'                  " Soft buffer close
     Plug 'easymotion/vim-easymotion'      " hilights your motions with \\
     Plug 'justinmk/vim-sneak'             " Sneak to character pair with s/z{ab}
@@ -44,6 +43,12 @@ if has('gui_running')
   set guioptions-=m  " no menu
   set mouse=a        " mouse interactive, c for not interactive
   set guifont=Inconsolata\ Regular\ 14
+endif
+
+" I often alias gvim to 'gvim --remote-silent'
+" If this starts a new server, wipe the empty document on load
+if bufname('%') == ''
+  set bufhidden=wipe
 endif
 
 " Attempt to make esk/jk more responsive
@@ -129,11 +134,11 @@ set completeopt=menuone  " ,noselect,noinsert
 " augroup END
 
 
-inoremap jk <Esc><Esc>:SudoWrite<CR>
-inoremap kj <Esc><Esc>:SudoWrite<CR>
-inoremap jK <Esc><Esc>:SudoWrite<CR>
-inoremap JK <Esc><Esc>:SudoWrite<CR>
-inoremap Jk <Esc><Esc>:SudoWrite<CR>
+inoremap jk <Esc><Esc>
+" inoremap kj <Esc><Esc>
+" inoremap jK <Esc><Esc>
+" inoremap JK <Esc><Esc>
+" inoremap Jk <Esc><Esc>
 "
 " inoremap jk <Esc><Esc>  " Doesnt like popups
 " inoremap <expr> jk pumvisible() ? "<Esc><Esc>" : "<Esc>"
@@ -198,14 +203,12 @@ imap <Esc> <Nop>
 nnoremap q :nohl<CR>
 nnoremap Q lD
 " vmap x "_d
-" nnoremap <Space> f<Space>
-" nnoremap <S-Space> F<Space>
+
+" Insert whitespace without entering insert mode
+nnoremap <Space> f<Space>
+nnoremap <S-Space> F<Space>
 nnoremap <S-Enter> O<Esc><Down>
 nnoremap <Enter> o<Esc><Up>
-" nnoremap <C-h> a<Space><esc><Left>
-" nnoremap <C-l> i<Space><esc><Right>
-" nnoremap <C-j> O<Esc><Down>
-" nnoremap <C-k> o<Esc><Up>
 
 nnoremap L :bn<CR>
 nnoremap H :bp<CR>
@@ -239,7 +242,7 @@ nnoremap <Right> <NOP>
 " inoremap <Down> <NOP>
 
 " {experimental} open, push and close...
-nmap <F8> :source ~/.vimrc<CR>
+" nmap <F8> :source ~/.vimrc<CR>
 " python import vim
 " nmap <F4> :python py_link = open('/home/areid/.py_link', 'w')<CR>
 " nmap <F5> :python py_link.write(vim.current.line + "\n"); py_link.flush()<CR>
@@ -271,11 +274,16 @@ sunmap b
 sunmap e
 sunmap ge
 
-" Some plugin is unsetting this...
-set textwidth=79            " Line width (pep syntax check)
-
 " Don't code-complete english:
 let g:completor_blacklist=['text', 'markdown']
-autocmd FileType text setlocal spell spelllang=en_au
-autocmd FileType text setlocal complete=""
 
+autocmd FileType tex setlocal spell spelllang=en_au
+autocmd FileType tex setlocal complete=""
+autocmd FileType tex setlocal noai nocin nosi inde=
+autocmd FileType tex setlocal linebreak wrap columns=86
+autocmd FileType tex nmap j gj
+autocmd FileType tex nmap k gk
+
+
+" Some plugin is unsetting this...
+set textwidth=79            " Line width (pep syntax check)
