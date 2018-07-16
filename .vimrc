@@ -11,7 +11,7 @@ endif
 
 " List of active plugins
 call plug#begin('~/.vim/plugged')
-    Plug 'scrooloose/nerdtree'            " Tree based file browser (ctrl-f)
+    " Plug 'scrooloose/nerdtree'            " Tree based file browser (ctrl-f)
     Plug 'bkad/CamelCaseMotion'           " Break CamelCase into words.
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'               " Advanced file searching
@@ -52,7 +52,7 @@ if bufname('%') == ''
 endif
 
 " Attempt to make esk/jk more responsive
-:set esckeys
+" :set esckeys
 set ttimeoutlen=0
 set timeoutlen=1000
 " set timeout                 " Key mappings go away after a little while
@@ -176,13 +176,16 @@ set swapfile
 " ripgrep is beast!
 " command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number . ../ ~/code/glabrezu/glabrezu ~/code/dretch/dretch ~/code/modron/modron', 0)
 command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number .$ ~/code/', 0)
+command! -bang -nargs=* FzfProj call fzf#run({'source': 'lsproject',
+    \ 'sink': 'e'})
+    " \ 'window': 'enew'})
 
 """ Quicker assisted find (usually leader-leader):
 map <leader>f <Plug>(easymotion-f)
 map <leader>F <Plug>(easymotion-F)
 
 " {n}ame, {b}uffers, {l}ines, {a}g
-nnoremap <silent> <leader>n :FzfFiles<CR>
+nnoremap <silent> <leader>n :FzfProj<CR>
 nnoremap <silent> <leader>b :FzfBuffers<CR>
 nnoremap <silent> <leader>l :FzfLines<CR>
 nnoremap <silent> <leader>a :FzfAu<CR>
@@ -199,9 +202,12 @@ nnoremap <C-k> a<C-x>s
 nnoremap <C-x> oimport debug<CR>debug.embed(locals(), globals())<CR><ESC>
 inoremap <C-x> import debug<CR>debug.embed(locals(), globals())<CR>
 
-imap <Esc> <Nop>
+" imap <Esc> <Nop>
 nnoremap q :nohl<CR>
 nnoremap Q lD
+" Avoid accidental macros
+vnoremap q <Nop>
+vnoremap Q <Nop>
 " vmap x "_d
 
 " Insert whitespace without entering insert mode
@@ -217,16 +223,19 @@ nmap <S-Tab> <<
 vmap <Tab> >gv
 vmap <s-tab> <gv
 map gs '[V']
-nnoremap K :SudoWrite<CR>
+" or :SudoWrite<CR>
+nnoremap K :w<CR>
+vnoremap K V:w<CR>
+" disable two sequence window navigation
 inoremap <C-w> <NOP>
-nmap <silent> <C-c> :Bdelete<CR>
-nmap <silent> <C-w> :wincmd c<CR>
-nmap <silent> <A-s> :vsplit<CR>
-nmap <silent> <A-=> :wincmd =<CR>
-nmap <silent> <A-k> :wincmd k<CR>
-nmap <silent> <A-j> :wincmd j<CR>
-nmap <silent> <A-h> :wincmd h<CR>
-nmap <silent> <A-l> :wincmd l<CR>
+nmap <silent> <C-w> :Bdelete<CR>
+nmap <silent> <C-z> :wincmd q<CR>
+nmap <silent> <C-s> :vsplit<CR>
+nmap <silent> <C-=> :wincmd =<CR>
+nmap <silent> <C-Up> :wincmd k<CR>
+nmap <silent> <A-Down> :wincmd j<CR>
+nmap <silent> <A-Left> :wincmd h<CR>
+nmap <silent> <A-Right> :wincmd l<CR>
 nmap X 0D
 
 " Normal mode - only up and down and targeted motions
@@ -274,9 +283,11 @@ sunmap b
 sunmap e
 sunmap ge
 
+" always paste in new line with ctrl-P 
+nmap <C-p> k:pu<CR>
+
 " Don't code-complete english:
 let g:completor_blacklist=['text', 'markdown']
-
 autocmd FileType tex setlocal spell spelllang=en_au
 autocmd FileType tex setlocal complete=""
 autocmd FileType tex setlocal noai nocin nosi inde=
@@ -284,6 +295,12 @@ autocmd FileType tex setlocal linebreak wrap columns=86
 autocmd FileType tex nmap j gj
 autocmd FileType tex nmap k gk
 
+autocmd FileType text setlocal spell spelllang=en_au
+autocmd FileType text setlocal complete=""
+autocmd FileType text setlocal noai nocin nosi inde=
+autocmd FileType text setlocal linebreak wrap columns=86
+autocmd FileType text nmap j gj
+autocmd FileType text nmap k gk
 
 " Some plugin is unsetting this...
 set textwidth=79            " Line width (pep syntax check)

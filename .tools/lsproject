@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+import os
+
+cwd = os.getcwd()
+code_root = os.path.expanduser("~/code/")
+
+if cwd.startswith(code_root):
+    project = cwd[len(code_root):].split('/')[0]
+    root = code_root + project
+else:
+    root = cwd
+
+nroot = len(root) + 1
+sup = cwd[nroot:]
+
+ignore = [".mypy", ".git", ".pytest", "__pycache__", ".egg-info"]
+fignore = [".mod", ".7z"]
+
+for dname, _, files in os.walk(root):
+    dname = dname[nroot:]
+
+    skip = False
+    for ig in ignore:
+        if ig in dname:
+            skip = True
+            break
+    if skip:
+        continue
+
+    if dname == sup:
+        back = ""
+        fwd = ""
+    else:
+        i = 0
+        stop = min(len(dname), len(sup))
+        while i < stop and dname[i] == sup[i]:
+            i += 1
+        if sup[i:].startswith("/"):
+            i += 1
+        back = "../" * (1 + sup[i:].count('/'))
+        fwd = dname[i:]
+    # print(dname, " == ", back + fwd)
+    path = back + fwd
+    if len(path) and not path.endswith("/"):
+        path += "/"
+
+    for f in files:
+        for g in fignore:
+            if g in f:
+                break
+        else:
+            print(path + f)
+
+#     depth = dname.count('/')
+#     print(root, name, files)
+
+#     root = root.split("code/")[1]
