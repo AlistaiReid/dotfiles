@@ -69,9 +69,12 @@ let g:ale_lint_on_insert_leave=1
 " speed up suggested on site
 let g:pymode_rope = 0
 
+" au FocusLost * :echo "Focus lost: saving all buffers" | :silent wall
+
 " Default Formatting and Indenting
 syntax on
 filetype plugin indent on
+set ttyfast
 set foldmethod=manual       " Don't fold up (see zf)
 set clipboard=unnamedplus   " System clipboard default
 set textwidth=79            " Line width (pep syntax check)
@@ -85,13 +88,10 @@ set smarttab                " tab width determined by shiftwidth
 set hidden                  " You can switch buffers without saving
 set matchpairs+=<:>         " more pairs we can use, for html etc
 set noshowmatch             " don't freeze up trying to find a match.
-" set matchtime=2             " 0.2 seconds
 set hlsearch                " hilight search results (F8 to un-hilight)
 set whichwrap+=[]<>hl       " link lines by left/right to prev/next line.
 set nowrap                  " let lines go off edge of screen
-set formatoptions-=t        " dont actually force a newline unless wrapping with gw
 set formatoptions=
-" set formatoptions-=cro      " dont comment on next line
 set lazyredraw              " don't redraw whilst running macros
 set colorcolumn=80          " Show that last column
 set scrolloff=80            " How close can you get to the edge without scrolling
@@ -111,16 +111,6 @@ let g:tex_flavor='latex'    " Formatting style.
 set completeopt=menuone,noselect
 let g:completor_complete_options='menuone,noselect'
 
-" " Vim-hardtime
-" let g:hardtime_maxcount=1   " allow two presses (default is 1)
-" let g:hardtime_timeout=100  " punishment time (ms)
-" let g:hardtime_allow_different_key=1
-" let g:hardtime_default_on = 1  " Hard time on every buffer
-" let g:list_of_normal_keys = ["h", "l"]
-" let g:list_of_visual_keys = ["h", "l"]
-" let g:list_of_insert_keys = ["<UP>", "<DOWN>"]
-" let g:list_of_disabled_keys = []
-
 " " Tex-specific configuration
 " augroup ft_tex
 "     au!
@@ -137,17 +127,8 @@ let g:completor_complete_options='menuone,noselect'
 "     au FileType tex setlocal iskeyword+=: 
 " augroup END
 
-
 inoremap jk <Esc><Esc>
-" inoremap kj <Esc><Esc>
-" inoremap jK <Esc><Esc>
-" inoremap JK <Esc><Esc>
-" inoremap Jk <Esc><Esc>
-"
-" inoremap jk <Esc><Esc>  " Doesnt like popups
 " inoremap <expr> jk pumvisible() ? "<Esc><Esc>" : "<Esc>"
-" NERDTree file browser
-let g:NERDTreeQuitOnOpen = 1
 
 " use lightline-buffer in lightline
 let g:lightline = {
@@ -175,12 +156,7 @@ set noundofile
 set dir=~/.vim/swap/
 set swapfile
 
-" Custom fzf#Ag
-" command! -bang -nargs=* FzfAu call fzf#vim#grep('ag --nogroup --color -G ".*py$" ".$" ~/code/glabrezu/glabrezu ~/code/dretch/dretch ~/code/modron/modron', 0)
-" ripgrep is beast!
-" command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number . ../ ~/code/glabrezu/glabrezu ~/code/dretch/dretch ~/code/modron/modron', 0)
-" {n}ame, {b}uffers, {l}ines, {a}g
-" " default layout
+" Custom fzf stuff:
 let g:fzf_layout = { 'down': '~40%' }
 nnoremap <silent> <leader>b :FzfBuffers<CR>
 command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number .$ ~/code/', 0)
@@ -205,13 +181,17 @@ nnoremap <C-k> a<C-x>s
 nnoremap <C-x> oimport debug<CR>debug.embed(locals(), globals())<CR><ESC>
 inoremap <C-x> import debug<CR>debug.embed(locals(), globals())<CR>
 
-" imap <Esc> <Nop>
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
+
+
+" Turn off q
 nnoremap q :nohl<CR>
 nnoremap Q lD
 " Avoid accidental macros
 vnoremap q <Nop>
 vnoremap Q <Nop>
-" vmap x "_d
 
 " Insert whitespace without entering insert mode
 nnoremap <Space> f<Space>
@@ -225,7 +205,7 @@ nmap <Tab> >>
 nmap <S-Tab> <<
 vmap <Tab> >gv
 vmap <s-tab> <gv
-map gs '[V']
+" map gs '[V']
 " or :SudoWrite<CR>
 nnoremap K :w<CR>
 vnoremap K V:w<CR>
@@ -241,6 +221,7 @@ nmap <silent> <A-Left> :wincmd h<CR>
 nmap <silent> <A-Right> :wincmd l<CR>
 nmap X 0D
 
+" Habit forming
 " Normal mode - only up and down and targeted motions
 " nnoremap h <NOP>
 " nnoremap l <NOP>
@@ -248,18 +229,10 @@ nnoremap <Up>  <NOP>
 nnoremap <Down> <NOP>
 nnoremap <Left>  <NOP>
 nnoremap <Right> <NOP>
-
 " Insert mode - only left, right for spelling correction
 " inoremap <Up> <NOP>
 " inoremap <Down> <NOP>
 
-" {experimental} open, push and close...
-" nmap <F8> :source ~/.vimrc<CR>
-" python import vim
-" nmap <F4> :python py_link = open('/home/areid/.py_link', 'w')<CR>
-" nmap <F5> :python py_link.write(vim.current.line + "\n"); py_link.flush()<CR>
-" vmap <F5> y:python py_link.write("%paste\nglobals().update(locals())\n"); py_link.flush()<CR>
-" nmap <F6> :python py_link.close()<CR>
 
 " A plugin is unsetting this:
 imap +- ±
@@ -287,7 +260,7 @@ sunmap e
 sunmap ge
 
 " always paste in new line with ctrl-P 
-nmap <C-p> k:pu<CR>
+" nmap <C-p> k:pu<CR>
 
 " Don't code-complete english:
 let g:completor_blacklist=['text', 'markdown']
