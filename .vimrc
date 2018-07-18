@@ -175,22 +175,22 @@ set swapfile
 " command! -bang -nargs=* FzfAu call fzf#vim#grep('ag --nogroup --color -G ".*py$" ".$" ~/code/glabrezu/glabrezu ~/code/dretch/dretch ~/code/modron/modron', 0)
 " ripgrep is beast!
 " command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number . ../ ~/code/glabrezu/glabrezu ~/code/dretch/dretch ~/code/modron/modron', 0)
+" {n}ame, {b}uffers, {l}ines, {a}g
+" " default layout
+let g:fzf_layout = { 'down': '~40%' }
+nnoremap <silent> <leader>b :FzfBuffers<CR>
 command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number .$ ~/code/', 0)
-command! -bang -nargs=* FzfProj call fzf#run({'source': 'lsproject',
-    \ 'sink': 'e'})
-    " \ 'window': 'enew'})
+command! -bang -nargs=* FzfProj call fzf#run({'source': 'lsproject', 'left': '20%', 'sink': 'e'})
+nnoremap <silent> <leader>n :FzfProj<CR>
+nnoremap <silent> <leader>a :FzfAu<CR>
 
 """ Quicker assisted find (usually leader-leader):
 map <leader>f <Plug>(easymotion-f)
 map <leader>F <Plug>(easymotion-F)
 
-" {n}ame, {b}uffers, {l}ines, {a}g
-nnoremap <silent> <leader>n :FzfProj<CR>
-nnoremap <silent> <leader>b :FzfBuffers<CR>
-nnoremap <silent> <leader>l :FzfLines<CR>
-nnoremap <silent> <leader>a :FzfAu<CR>
-nnoremap <silent> <C-f> :NERDTree <CR>
-
+" nnoremap <silent> <leader>l :FzfLines<CR>
+" nnoremap <silent> <C-f> :NERDTree <CR>
+nnoremap <silent> <C-f> <Nop>
 
 " completor using ctrl-j and ctrl-k with auto-close. <C-n>=Down, <C-p>
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : ""

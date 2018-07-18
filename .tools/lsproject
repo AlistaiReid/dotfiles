@@ -27,9 +27,9 @@ for dname, _, files in os.walk(root):
     if skip:
         continue
 
-    if dname == sup:
+    if dname.startswith(sup):
         back = ""
-        fwd = ""
+        fwd = dname[len(sup):]
     else:
         i = 0
         stop = min(len(dname), len(sup))
@@ -40,6 +40,8 @@ for dname, _, files in os.walk(root):
         back = "../" * (1 + sup[i:].count('/'))
         fwd = dname[i:]
     # print(dname, " == ", back + fwd)
+    if fwd.startswith("/"):
+        fwd = fwd[1:]
     path = back + fwd
     if len(path) and not path.endswith("/"):
         path += "/"
