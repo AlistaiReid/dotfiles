@@ -66,6 +66,9 @@ let &runtimepath.=',~/.vim/bundle/ale'
 let g:ale_lint_on_text_changed='normal'
 let g:ale_lint_on_insert_leave=1
 
+" speed up suggested on site
+let g:pymode_rope = 0
+
 " Default Formatting and Indenting
 syntax on
 filetype plugin indent on
@@ -105,7 +108,8 @@ let mapleader =             " "       " Default leader is too far
 let g:fzf_command_prefix = 'Fzf'
 let g:pymode_indent = 0     " Make sure pep8-indent gets to do its thing
 let g:tex_flavor='latex'    " Formatting style.
-set completeopt=menuone  " ,noselect,noinsert
+set completeopt=menuone,noselect
+let g:completor_complete_options='menuone,noselect'
 
 " " Vim-hardtime
 " let g:hardtime_maxcount=1   " allow two presses (default is 1)
@@ -195,7 +199,6 @@ nnoremap <silent> <C-f> <Nop>
 " completor using ctrl-j and ctrl-k with auto-close. <C-n>=Down, <C-p>
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : ""
 inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : ""
-inoremap <C-Space> <Enter><Esc>
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 nnoremap <C-k> a<C-x>s
 
