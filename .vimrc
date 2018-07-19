@@ -159,10 +159,10 @@ set swapfile
 " Custom fzf stuff:
 let g:fzf_layout = { 'down': '~40%' }
 nnoremap <silent> <leader>b :FzfBuffers<CR>
-command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number .$ ~/code/', 0)
+" command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number .$ ~/code/', 0)
 command! -bang -nargs=* FzfProj call fzf#run({'source': 'lsproject', 'left': '20%', 'sink': 'e'})
 nnoremap <silent> <leader>n :FzfProj<CR>
-nnoremap <silent> <leader>a :FzfAu<CR>
+" nnoremap <silent> <leader>a :FzfAu<CR>
 
 """ Quicker assisted find (usually leader-leader):
 map <leader>f <Plug>(easymotion-f)
@@ -189,13 +189,12 @@ autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
 " Turn off q
 nnoremap q :nohl<CR>
 nnoremap Q lD
+
 " Avoid accidental macros
 vnoremap q <Nop>
 vnoremap Q <Nop>
 
 " Insert whitespace without entering insert mode
-nnoremap <Space> f<Space>
-nnoremap <S-Space> F<Space>
 nnoremap <S-Enter> O<Esc><Down>
 nnoremap <Enter> o<Esc><Up>
 
@@ -214,11 +213,8 @@ inoremap <C-w> <NOP>
 nmap <silent> <C-w> :Bdelete<CR>
 nmap <silent> <C-z> :wincmd q<CR>
 nmap <silent> <C-s> :vsplit<CR>
-nmap <silent> <C-=> :wincmd =<CR>
-nmap <silent> <C-Up> :wincmd k<CR>
-nmap <silent> <A-Down> :wincmd j<CR>
-nmap <silent> <A-Left> :wincmd h<CR>
-nmap <silent> <A-Right> :wincmd l<CR>
+nmap <silent> <C-h> :wincmd h<CR>
+nmap <silent> <C-l> :wincmd l<CR>
 nmap X 0D
 
 " Habit forming
