@@ -1,10 +1,10 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 export LC_ALL="en_US.UTF-8"
-export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
+export PATH="/home/areid/.nix-profile/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
+export NIX_PATH=nixpkgs=/home/areid/.nix-defexpr/channels/nixpkgs
 source ~/.private
 plugins=(git)
-
 
 # oh-my-zsh setup ------------------------
 # CASE_SENSITIVE="true"

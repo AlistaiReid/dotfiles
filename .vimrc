@@ -27,6 +27,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-commentary'           " Block commenting verb
     Plug 'w0rp/ale'                       " Async Linting Engine
     Plug 'maralla/completor.vim'          " Code completor (pip install jedi)
+    Plug 'LnL7/vim-nix'                   " Syntax & indentation for .nix
 call plug#end()
 
 " No bells
@@ -159,10 +160,10 @@ set swapfile
 " Custom fzf stuff:
 let g:fzf_layout = { 'down': '~40%' }
 nnoremap <silent> <leader>b :FzfBuffers<CR>
-" command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number .$ ~/code/', 0)
+command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number .$ ~/code/', 0)
 command! -bang -nargs=* FzfProj call fzf#run({'source': 'lsproject', 'left': '20%', 'sink': 'e'})
 nnoremap <silent> <leader>n :FzfProj<CR>
-" nnoremap <silent> <leader>a :FzfAu<CR>
+nnoremap <silent> <leader>a :FzfAu<CR>
 
 """ Quicker assisted find (usually leader-leader):
 map <leader>f <Plug>(easymotion-f)
@@ -172,11 +173,14 @@ map <leader>F <Plug>(easymotion-F)
 " nnoremap <silent> <C-f> :NERDTree <CR>
 nnoremap <silent> <C-f> <Nop>
 
+nnoremap <C-k> a<C-x>s<C-p>
+nnoremap <C-j> a<C-x>s<C-p>
+
 " completor using ctrl-j and ctrl-k with auto-close. <C-n>=Down, <C-p>
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : ""
 inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : ""
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-nnoremap <C-k> a<C-x>s
 
 nnoremap <C-x> oimport debug<CR>debug.embed(locals(), globals())<CR><ESC>
 inoremap <C-x> import debug<CR>debug.embed(locals(), globals())<CR>
@@ -273,6 +277,8 @@ autocmd FileType text setlocal noai nocin nosi inde=
 autocmd FileType text setlocal linebreak wrap columns=86
 autocmd FileType text nmap j gj
 autocmd FileType text nmap k gk
+autocmd FileType text nmap <F2> [s
+autocmd FileType text nmap <F3> ]s
 
 " Some plugin is unsetting this...
 set textwidth=79            " Line width (pep syntax check)

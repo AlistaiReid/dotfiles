@@ -13,8 +13,10 @@ else:
 nroot = len(root) + 1
 sup = cwd[nroot:]
 
-ignore = [".mypy", ".git", ".pytest", "__pycache__", ".egg-info"]
-fignore = [".mod", ".7z"]
+ignore = [".mypy", ".git", ".pytest", "__pycache__", ".egg-info", ".cache"]
+fignore = [".mod", ".7z", ".png", ".jpg", ".pdf", ".xlsx", ".dat"]
+
+outputs = []
 
 for dname, _, files in os.walk(root):
     dname = dname[nroot:]
@@ -32,11 +34,12 @@ for dname, _, files in os.walk(root):
         fwd = dname[len(sup):]
     else:
         i = 0
-        stop = min(len(dname), len(sup))
+        stop = min(len(dname), len(sup)) - 1
         while i < stop and dname[i] == sup[i]:
             i += 1
-        if sup[i:].startswith("/"):
-            i += 1
+        # now wind backwards to the last slash
+        while i > 0 and dname[i] != "/":
+            i -= 1
         back = "../" * (1 + sup[i:].count('/'))
         fwd = dname[i:]
     # print(dname, " == ", back + fwd)
@@ -51,8 +54,14 @@ for dname, _, files in os.walk(root):
             if g in f:
                 break
         else:
-            print(path + f)
+            ffname = (path + f)
+            priority = ffname.count("../") + ffname.count("/") + \
+                f.startswith(".")
+            outputs.append((priority, ffname))
 
+v = [n for p, n in sorted(outputs)]
+for ff in v:
+    print(ff)
 #     depth = dname.count('/')
 #     print(root, name, files)
 
