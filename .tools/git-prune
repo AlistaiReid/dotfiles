@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+import subprocess
+# require pacin dialog
+
+
+def run(cmd):
+    print(cmd)
+    return subprocess.check_output(cmd.split()).decode()
+
+run("git checkout develop")
+run("git pull")
+merged = run("git branch --merged origin/develop^")
+remotes = run("git branch -r --merged origin/develop^")
+
+lists = merged.split() + remotes.split()
+if len(lists):
+    s = ""
+    for i, l in enumerate(lists):
+        s += ' {} {} on'.format(l, '\u200B')
+
+    select = subprocess.run(
+        ("dialog --checklist Delete 35 70 20" + s).split(),
+        stderr=subprocess.PIPE
+    ).stderr.decode('unicode_escape')
+
+    select = select.replace('"', '').replace('\\#', '#').split()
+    for s in select:
+        if s.startswith("origin/"):
+            run("git push origin :" + s[7:])
+        else:
+            run("git branch -d " + s)
+
+    # Dialog.set_background_title() requires pythondialog 2.13 or later
+    # git branch -d </tmp/branches'
+    # git push origin :blah
