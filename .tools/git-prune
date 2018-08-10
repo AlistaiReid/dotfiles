@@ -4,15 +4,22 @@ import subprocess
 
 
 def run(cmd):
-    print(cmd)
+    # print(cmd)
     return subprocess.check_output(cmd.split()).decode()
 
-run("git checkout develop")
-run("git pull")
-merged = run("git branch --merged origin/develop^")
-remotes = run("git branch -r --merged origin/develop^")
+run("git fetch --prune")
+merged = run("git branch --merged origin/develop")
+remotes = run("git branch -r --merged origin/develop")
+# subprocess.Popen("gitg")
 
 lists = merged.split() + remotes.split()
+blacklist = [
+    "master", "develop", "HEAD", "->", "*"
+]
+lists = [
+    l for l in lists if not any(l.endswith(b) for b in blacklist)
+]
+
 if len(lists):
     s = ""
     for i, l in enumerate(lists):
@@ -21,15 +28,17 @@ if len(lists):
     select = subprocess.run(
         ("dialog --checklist Delete 35 70 20" + s).split(),
         stderr=subprocess.PIPE
-    ).stderr.decode('unicode_escape')
+    ).stderr.decode()
 
     select = select.replace('"', '').replace('\\#', '#').split()
+
     for s in select:
         if s.startswith("origin/"):
             run("git push origin :" + s[7:])
         else:
             run("git branch -d " + s)
-
+else:
+    print("Repo is pruned.")
     # Dialog.set_background_title() requires pythondialog 2.13 or later
     # git branch -d </tmp/branches'
     # git push origin :blah
