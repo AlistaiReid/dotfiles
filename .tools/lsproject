@@ -2,67 +2,74 @@
 import os
 
 cwd = os.getcwd()
+
 code_root = os.path.expanduser("~/code/")
 
-if cwd.startswith(code_root):
-    project = cwd[len(code_root):].split('/')[0]
-    root = code_root + project
+if not cwd.startswith(code_root):
+    for v in os.listdir("."):
+        if os.path.isfile(v):
+            print(v)
+
 else:
-    root = cwd
-
-nroot = len(root) + 1
-sup = cwd[nroot:]
-
-ignore = [".mypy", ".git", ".pytest", "__pycache__", ".egg-info", ".cache"]
-fignore = [".mod", ".7z", ".png", ".jpg", ".pdf", ".xlsx", ".dat"]
-
-outputs = []
-
-for dname, _, files in os.walk(root):
-    dname = dname[nroot:]
-
-    skip = False
-    for ig in ignore:
-        if ig in dname:
-            skip = True
-            break
-    if skip:
-        continue
-
-    if dname.startswith(sup):
-        back = ""
-        fwd = dname[len(sup):]
+    if cwd.startswith(code_root):
+        project = cwd[len(code_root):].split('/')[0]
+        root = code_root + project
     else:
-        i = 0
-        stop = min(len(dname), len(sup)) - 1
-        while i < stop and dname[i] == sup[i]:
-            i += 1
-        # now wind backwards to the last slash
-        while i > 0 and dname[i] != "/":
-            i -= 1
-        back = "../" * (1 + sup[i:].count('/'))
-        fwd = dname[i:]
-    # print(dname, " == ", back + fwd)
-    if fwd.startswith("/"):
-        fwd = fwd[1:]
-    path = back + fwd
-    if len(path) and not path.endswith("/"):
-        path += "/"
+        root = cwd
 
-    for f in files:
-        for g in fignore:
-            if g in f:
+    nroot = len(root) + 1
+    sup = cwd[nroot:]
+
+    ignore = [".mypy", ".git", ".pytest", "__pycache__", ".egg-info", ".cache"]
+    fignore = [".mod", ".7z", ".png", ".jpg", ".pdf", ".xlsx", ".dat", ".aux"]
+
+    outputs = []
+
+    for dname, _, files in os.walk(root):
+        dname = dname[nroot:]
+
+        skip = False
+        for ig in ignore:
+            if ig in dname:
+                skip = True
                 break
+        if skip:
+            continue
+
+        if dname.startswith(sup):
+            back = ""
+            fwd = dname[len(sup):]
         else:
-            ffname = (path + f)
-            priority = ffname.count("../") + ffname.count("/") + \
-                f.startswith(".")
-            outputs.append((priority, ffname))
+            i = 0
+            stop = min(len(dname), len(sup)) - 1
+            while i < stop and dname[i] == sup[i]:
+                i += 1
+            # now wind backwards to the last slash
+            while i > 0 and dname[i] != "/":
+                i -= 1
+            back = "../" * (1 + sup[i:].count('/'))
+            fwd = dname[i:]
+        # print(dname, " == ", back + fwd)
+        if fwd.startswith("/"):
+            fwd = fwd[1:]
+        path = back + fwd
+        if len(path) and not path.endswith("/"):
+            path += "/"
 
-v = [n for p, n in sorted(outputs)]
-for ff in v:
-    print(ff)
-#     depth = dname.count('/')
-#     print(root, name, files)
+        for f in files:
+            for g in fignore:
+                if g in f:
+                    break
+            else:
+                ffname = (path + f)
+                priority = ffname.count("../") + ffname.count("/") + \
+                    f.startswith(".")
+                outputs.append((priority, ffname))
 
-#     root = root.split("code/")[1]
+    v = [n for p, n in sorted(outputs)]
+    for ff in v:
+        print(ff)
+    #     depth = dname.count('/')
+    #     print(root, name, files)
+
+    #     root = root.split("code/")[1]

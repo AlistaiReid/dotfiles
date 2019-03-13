@@ -15,13 +15,14 @@ call plug#begin('~/.vim/plugged')
     Plug 'bkad/CamelCaseMotion'           " Break CamelCase into words.
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'               " Advanced file searching
-    Plug 'jnurmine/Zenburn'               " Nice dark one
+    Plug 'jnurmine/Zenburn'               " Nice dark scheme
     Plug 'tpope/vim-eunuch'               " for :SudoWrite :Rename
     Plug 'itchyny/lightline.vim'          " Status line
-    Plug 'taohex/lightline-buffer'        " Buffer navigate
+    " Plug 'taohexxx/lightline-buffer'        " Buffer navigate
+    " Plug 'taohex/lightline-buffer'        " Buffer navigate
     Plug 'moll/vim-bbye'                  " Soft buffer close
     Plug 'easymotion/vim-easymotion'      " hilights your motions with \\
-    Plug 'justinmk/vim-sneak'             " Sneak to character pair with s/z{ab}
+    " Plug 'justinmk/vim-sneak'             " Sneak to character pair with s/z{ab}
     Plug 'tommcdo/vim-lion'               " align characters gl, gL
     Plug 'hynek/vim-python-pep8-indent'   " Pep-8 style indenting
     Plug 'tpope/vim-commentary'           " Block commenting verb
@@ -76,7 +77,10 @@ let g:pymode_rope = 0
 syntax on
 filetype plugin indent on
 set ttyfast
+set showtabline=0           " get used to not showing tabline
 set foldmethod=manual       " Don't fold up (see zf)
+set bri                     " indent if wrapping
+set spelllang=en_au         " Australian english if spelling
 set clipboard=unnamedplus   " System clipboard default
 set textwidth=79            " Line width (pep syntax check)
 set shiftwidth=4            " operation >> indents 4 columns etc
@@ -104,7 +108,6 @@ set ssop-=options           " Don't save settings in a session - allows changes 
 set ssop-=folds             " this vimrc file to apply to old sessions.
 set equalalways             " Keep splits the same size
 set autochdir               " Make vim automatically change dir to buffer's dir
-set showtabline=2           " always show tabline
 let mapleader =             " "       " Default leader is too far
 let g:fzf_command_prefix = 'Fzf'
 let g:pymode_indent = 0     " Make sure pep8-indent gets to do its thing
@@ -220,6 +223,7 @@ nmap <silent> <C-s> :vsplit<CR>
 nmap <silent> <C-h> :wincmd h<CR>
 nmap <silent> <C-l> :wincmd l<CR>
 nmap X 0D
+imap X- X_
 
 " Habit forming
 " Normal mode - only up and down and targeted motions
@@ -259,26 +263,51 @@ sunmap b
 sunmap e
 sunmap ge
 
-" always paste in new line with ctrl-P 
-" nmap <C-p> k:pu<CR>
+" Allow wrapping
+function ToggleWrap()
+  if &wrap
+    echo "Wrap OFF"
+    setlocal nowrap
+    set virtualedit=all
+    silent! nunmap <buffer> <Up>
+    silent! nunmap <buffer> <Down>
+    silent! nunmap <buffer> <Home>
+    silent! nunmap <buffer> <End>
+    silent! iunmap <buffer> <Up>
+    silent! iunmap <buffer> <Down>
+    silent! iunmap <buffer> <Home>
+    silent! iunmap <buffer> <End>
+    silent! nunmap <buffer> j
+    silent! nunmap <buffer> k
+  else
+    echo "Wrap ON"
+    setlocal wrap linebreak nolist
+    set virtualedit=
+    setlocal display+=lastline
+    noremap  <buffer> <silent> <Up>   gk
+    noremap  <buffer> <silent> <Down> gj
+    noremap  <buffer> <silent> <Home> g<Home>
+    noremap  <buffer> <silent> <End>  g<End>
+    inoremap <buffer> <silent> <Up>   <C-o>gk
+    inoremap <buffer> <silent> <Down> <C-o>gj
+    inoremap <buffer> <silent> <Home> <C-o>g<Home>
+    inoremap <buffer> <silent> <End>  <C-o>g<End>
+    noremap <buffer> <silent> j gj
+    noremap <buffer> <silent> k gk
+  endif
+endfunction
+noremap <silent> <Leader>w :call ToggleWrap()<CR>
 
-" Don't code-complete english:
 let g:completor_blacklist=['text', 'markdown']
-autocmd FileType tex setlocal spell spelllang=en_au
-autocmd FileType tex setlocal complete=""
-autocmd FileType tex setlocal noai nocin nosi inde=
-autocmd FileType tex setlocal linebreak wrap columns=86
-autocmd FileType tex nmap j gj
-autocmd FileType tex nmap k gk
-
-autocmd FileType text setlocal spell spelllang=en_au
-autocmd FileType text setlocal complete=""
-autocmd FileType text setlocal noai nocin nosi inde=
-autocmd FileType text setlocal linebreak wrap columns=86
-autocmd FileType text nmap j gj
-autocmd FileType text nmap k gk
+autocmd FileType tex,text setlocal complete=""
+autocmd FileType tex,text syntax spell toplevel
+autocmd FileType tex,text setlocal spell
+" autocmd FileType tex setlocal noai nocin nosi inde=
+" autocmd FileType tex setlocal linebreak wrap columns=86
 autocmd FileType text nmap <F2> [s
 autocmd FileType text nmap <F3> ]s
+autocmd FileType tex setlocal shiftwidth=2
+let g:tex_coment_nospell=1
 
 " Some plugin is unsetting this...
 set textwidth=79            " Line width (pep syntax check)
