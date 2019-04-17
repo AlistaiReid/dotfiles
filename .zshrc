@@ -182,4 +182,7 @@ synclient TapButton1=1
 synclient TapButton2=3
 # syndaemon -i 0.5 -d -K
 
+function npm-do { (PATH=$(npm bin):$PATH; eval $@;) }
+
+
 export QT_AUTO_SCREEN_SCALE_FACTOR=1

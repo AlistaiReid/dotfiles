@@ -11,21 +11,22 @@ endif
 
 " List of active plugins
 call plug#begin('~/.vim/plugged')
-    " Plug 'scrooloose/nerdtree'            " Tree based file browser (ctrl-f)
+    " Plug 'scrooloose/nerdtree'          " Tree based file browser (ctrl-f)
     Plug 'bkad/CamelCaseMotion'           " Break CamelCase into words.
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'               " Advanced file searching
     Plug 'jnurmine/Zenburn'               " Nice dark scheme
     Plug 'tpope/vim-eunuch'               " for :SudoWrite :Rename
     Plug 'itchyny/lightline.vim'          " Status line
-    " Plug 'taohexxx/lightline-buffer'        " Buffer navigate
-    " Plug 'taohex/lightline-buffer'        " Buffer navigate
+    Plug 'taohexxx/lightline-buffer'    " Buffer navigate
+    " Plug 'taohex/lightline-buffer'      " Buffer navigate
     Plug 'moll/vim-bbye'                  " Soft buffer close
     Plug 'easymotion/vim-easymotion'      " hilights your motions with \\
-    " Plug 'justinmk/vim-sneak'             " Sneak to character pair with s/z{ab}
+    " Plug 'justinmk/vim-sneak'           " Sneak to character pair with s/z{ab}
     Plug 'tommcdo/vim-lion'               " align characters gl, gL
     Plug 'hynek/vim-python-pep8-indent'   " Pep-8 style indenting
     Plug 'tpope/vim-commentary'           " Block commenting verb
+    Plug 'tpope/vim-abolish'              " word manipulation
     Plug 'w0rp/ale'                       " Async Linting Engine
     Plug 'maralla/completor.vim'          " Code completor (pip install jedi)
     Plug 'LnL7/vim-nix'                   " Syntax & indentation for .nix
@@ -77,12 +78,13 @@ let g:pymode_rope = 0
 syntax on
 filetype plugin indent on
 set ttyfast
-set showtabline=0           " get used to not showing tabline
+set showtabline=2           " 0 = no tabline, 2 = always
 set foldmethod=manual       " Don't fold up (see zf)
 set bri                     " indent if wrapping
 set spelllang=en_au         " Australian english if spelling
 set clipboard=unnamedplus   " System clipboard default
-set textwidth=79            " Line width (pep syntax check)
+" let colorcolumn handle it
+" set textwidth=79            " Line width (pep syntax check)
 set shiftwidth=4            " operation >> indents 4 columns etc
 set tabstop=4               " a hard TAB displays as 4 columns
 set expandtab               " insert spaces when hitting TABs
@@ -96,6 +98,8 @@ set noshowmatch             " don't freeze up trying to find a match.
 set hlsearch                " hilight search results (F8 to un-hilight)
 set whichwrap+=[]<>hl       " link lines by left/right to prev/next line.
 set nowrap                  " let lines go off edge of screen
+set linebreak               " don't wrap half way through a word
+set nolist                  " list disables linebreak apparently
 set formatoptions=
 set lazyredraw              " don't redraw whilst running macros
 set colorcolumn=80          " Show that last column
@@ -126,7 +130,6 @@ let g:completor_complete_options='menuone,noselect'
 "     au FileType tex setlocal shiftwidth=2 
 "     au FileType tex setlocal tabstop=2 
 "     au FileType tex setlocal spelllang=en_gb 
-"     au FileType tex setlocal linebreak 
 "     au FileType tex setlocal spell 
 "     au FileType tex setlocal iskeyword+=: 
 " augroup END
@@ -164,8 +167,8 @@ set swapfile
 let g:fzf_layout = { 'down': '~40%' }
 nnoremap <silent> <leader>b :FzfBuffers<CR>
 command! -bang -nargs=* FzfAu call fzf#vim#grep('rg --type py --no-heading --line-number .$ ~/code/', 0)
-command! -bang -nargs=* FzfProj call fzf#run({'source': 'lsproject', 'left': '20%', 'sink': 'e'})
-nnoremap <silent> <leader>n :FzfProj<CR>
+command! -bang -nargs=* FzfProj call fzf#run({'source': 'lsproject', 'left': '30%', 'sink': 'e'})
+nnoremap <silent> <leader>n :lcd %:p:h<CR>:FzfProj<CR>
 nnoremap <silent> <leader>a :FzfAu<CR>
 
 """ Quicker assisted find (usually leader-leader):
@@ -204,7 +207,7 @@ vnoremap Q <Nop>
 " Insert whitespace without entering insert mode
 nnoremap <S-Enter> O<Esc><Down>
 nnoremap <Enter> o<Esc><Up>
-
+nnoremap <C-Enter> d$O<Esc>p
 nnoremap L :bn<CR>
 nnoremap H :bp<CR>
 nmap <Tab> >>
@@ -239,7 +242,7 @@ nnoremap <Right> <NOP>
 
 
 " A plugin is unsetting this:
-imap +- ±
+iabbrev +- ±
 let g:EasyMotion_keys='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 
 " Fancy movement
@@ -281,7 +284,7 @@ function ToggleWrap()
     silent! nunmap <buffer> k
   else
     echo "Wrap ON"
-    setlocal wrap linebreak nolist
+    setlocal wrap nolist
     set virtualedit=
     setlocal display+=lastline
     noremap  <buffer> <silent> <Up>   gk
@@ -300,14 +303,16 @@ noremap <silent> <Leader>w :call ToggleWrap()<CR>
 
 let g:completor_blacklist=['text', 'markdown']
 autocmd FileType tex,text setlocal complete=""
-autocmd FileType tex,text syntax spell toplevel
-autocmd FileType tex,text setlocal spell
 " autocmd FileType tex setlocal noai nocin nosi inde=
 " autocmd FileType tex setlocal linebreak wrap columns=86
-autocmd FileType text nmap <F2> [s
-autocmd FileType text nmap <F3> ]s
-autocmd FileType tex setlocal shiftwidth=2
+" autocmd FileType text nmap <F2> [s
+" autocmd FileType text nmap <F3> ]s
+autocmd FileType text,markdown,tex call ToggleWrap()
+autocmd FileType text,markdown,tex setlocal shiftwidth=2
 let g:tex_coment_nospell=1
+autocmd FileType tex,markdown,text syntax spell toplevel
+autocmd FileType tex,markdown,text setlocal spell
 
 " Some plugin is unsetting this...
-set textwidth=79            " Line width (pep syntax check)
+set textwidth=0            " was 79, dont auto Line width (pep syntax check)
+set wrapmargin=0
