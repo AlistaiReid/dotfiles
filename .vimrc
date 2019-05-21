@@ -188,8 +188,8 @@ inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : ""
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 
-nnoremap <C-x> oimport debug<CR>debug.embed(locals(), globals())<CR><ESC>
-inoremap <C-x> import debug<CR>debug.embed(locals(), globals())<CR>
+nnoremap <C-x> oimport smart_embed<CR>smart_embed.embed(locals(), globals())<CR><ESC>
+inoremap <C-x> import smart_embed<CR>smart_embed.embed(locals(), globals())<CR>
 
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS

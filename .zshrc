@@ -175,7 +175,7 @@ show(){
     which "$1" | xargs cat
 }
 
-source <(kubectl completion zsh)
+# source <(kubectl completion zsh)
 alias gvim='gvim --remote-silent'
 
 synclient TapButton1=1
