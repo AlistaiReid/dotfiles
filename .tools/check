@@ -1,4 +1,0 @@
-#!/usr/bin/bash
-py.test --cov=$(basename $PWD) -s tests
-py.test --flake8 --no-print-logs --cache-clear $(basename $PWD)
-# mypy ./$(basename $PWD)

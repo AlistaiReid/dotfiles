@@ -151,7 +151,7 @@ alias pacmir='sudo pacman -Syy' # Force refresh of all package lists after updat
 # source <(kubectl completion zsh)
 
 # Git flow completion:
-source ~/.tools/git-flow-completion/git-flow-completion.zsh
+# source ~/.tools/git-flow-completion/git-flow-completion.zsh
 
 # config config status.showUntrackedFiles no
 # config remote add origin git@github.com:AlistaiReid/dotfiles.git

@@ -583,11 +583,11 @@ prompt_status() {
   # [[ $RETVAL -ne 0 && $BULLETTRAIN_STATUS_EXIT_SHOW != true ]] && symbols+="✘"
   # [[ $RETVAL -ne 0 && $BULLETTRAIN_STATUS_EXIT_SHOW == true ]] && symbols+="✘ $RETVAL"
   # [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡%f"
-  local n_docker
-  n_docker=$[$(docker ps | wc -l) -1]
-  SYMBOL_BG=052
-  # ⚛ ⛽ 🐳 ↁ
-  [[ $n_docker -ne 0 ]] && symbols+="🐳 $n_docker"
+  # local n_docker
+  # n_docker=$[$(docker ps | wc -l) -1]
+  # SYMBOL_BG=052
+  # # ⚛ ⛽ 🐳 ↁ
+  # [[ $n_docker -ne 0 ]] && symbols+="🐳 $n_docker"
   local n_jobs
   n_jobs=$(jobs -l | wc -l)
   [[ $n_jobs -gt 0 ]] && symbols+="⚙$n_jobs"

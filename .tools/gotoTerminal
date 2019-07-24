@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-wmctrl -l |cut -f 5 -d' '|grep »|xargs test !  && gnome-terminal;
-wmctrl -a »

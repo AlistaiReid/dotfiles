@@ -1,4 +1,4 @@
-# sudo ln -s .tools/smart_embed.py /usr.lib/python3.6
+# sudo cp .tools/smart_embed.py /usr/lib/python3.6
 import inspect
 import IPython
 import sys
