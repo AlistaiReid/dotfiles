@@ -1,16 +1,13 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 export LC_ALL="en_US.UTF-8"
-export PATH="/home/areid/.nix-profile/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
-export NIX_PATH=nixpkgs=/home/areid/.nix-defexpr/channels/nixpkgs
 source ~/.private
-plugins=(git)
 
 # oh-my-zsh setup ------------------------
 # CASE_SENSITIVE="true"
 # HYPHEN_INSENSITIVE="true"
 # DISABLE_AUTO_UPDATE="true"
-# export UPDATE_ZSH_DAYS=13
+export UPDATE_ZSH_DAYS=7
 # DISABLE_LS_COLORS="true"
 DISABLE_AUTO_TITLE="true"
 # ENABLE_CORRECTION="true"
@@ -128,8 +125,13 @@ alias track='git log --follow --find-renames=60%'
 # alias gitfeature="git fetch && echo git push origin origin/develop:feature/\#(trim $1)"
 # alias git-prune="git checkout develop && git pull && git branch --merged origin/develop^ > /tmp/branches && vi /tmp/branches && xargs git branch -d </tmp/branches"
 
+# Attempt to update all the packages in a pip env
+# Really only do this if you are starting a new package
 alias pipupg="pip install -U pip && pip freeze | grep -v 'git' | cut -d = -f 1 | xargs -n1 pip install -U"
 # list --outdated | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
+
+# Get rid of extensive tensorflow logging.
+export TF_CPP_MIN_LOG_LEVEL=3
 
 
 alias pacall="LC_ALL=C pacman -Qi | sed -n '/^Name[^:]*: \(.*\)/{s//\1 /;x};/^Installed[^:]*: \(.*\)/{s//\1/;H;x;s/\n//;p}' | sort -nk2 | column -t"
@@ -146,33 +148,25 @@ alias paclocs='yay -Qs' # Search for package(s) in the local database
 alias pacupd='sudo pacman -Sy' # Update and refresh the local package and ABS databases against repositories
 alias pacinsd='sudo pacman -S --asdeps' # Install given package(s) as dependencies of another package
 alias pacmir='sudo pacman -Syy' # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist Created by newuser for 5.2
-
 # Get kubectl auto-completion stuff!
 # source <(kubectl completion zsh)
-
 # Git flow completion:
 # source ~/.tools/git-flow-completion/git-flow-completion.zsh
-
 # config config status.showUntrackedFiles no
 # config remote add origin git@github.com:AlistaiReid/dotfiles.git
-export LD_LIBRARY_PATH=/opt/cuda/lib64/
+# export LD_LIBRARY_PATH=/opt/cuda/lib64/
+#
 
-export MYPYPATH=/home/areid/code/stubs
-
-# Get rid of extensive tensorflow logging.
-export TF_CPP_MIN_LOG_LEVEL=3
-
+# I label my terminal tabs
 label Untitled
-# workon scratch
-# do something with $PWD
 
-alias debug='tee --output-error > ~/.py_link | python'  # run python, duplicating stdin to vim connection
+# If you want to use fzf interactively in terminal
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-show(){
+# function for displaying config files without thinking about where they are
+showme(){
     which "$1"
-    which "$1" | xargs cat
+    which "$1" | xargs cat | more
 }
 
 # source <(kubectl completion zsh)

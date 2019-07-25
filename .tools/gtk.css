@@ -1,0 +1,44 @@
+/* put in ~/.config/gtk-3.0/gtk.css */
+/* .maximized .titlebar.default-decoration { */
+.maximized .titlebar {
+  margin-top: -100px;
+  color: #1c2022; 
+}
+
+.tiled-right .titlebar {
+  margin: -200px;
+  opacity: 0;
+}
+.tiled-left .titlebar {
+  margin: -200px;
+  opacity: 0;
+}
+/* window.ssd separator:first-child + headerbar, */
+/* window.ssd headerbar:first-child:backdrop, */
+/* window.ssd headerbar:first-child, */
+/* window.ssd headerbar:last-child:backdrop, */
+/* window.ssd headerbar:last-child, */
+/* window.ssd stack headerbar:first-child:backdrop, */
+/* window.ssd stack headerbar:first-child, */
+/* window.ssd stack headerbar:last-child:backdrop, */
+/* window.ssd stack headerbar:last-child, */
+/* window.ssd decoration, */
+/* window.ssd headerbar.titlebar { */
+/*   border-radius: 0; */
+/* } */
+
+/* window.ssd headerbar * { */
+/*   margin-top: -100px; */
+/*   color: #1c2022; /1* May need to tweak, this matches Adwaita Dark *1/ */
+/* } */
+
+/* window.ssd headerbar.titlebar, */
+/* window.ssd headerbar.titlebar button.titlebutton { */
+/*   border: none; */
+/*   font-size: 0; */
+/*   height: 0; */
+/*   margin: 0px; */
+/*   max-height: 0; */
+/*   min-height: 0; */
+/*   padding: 0; */
+/* } */
