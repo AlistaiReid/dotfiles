@@ -78,6 +78,7 @@ let g:pymode_rope = 0
 syntax on
 filetype plugin indent on
 set ttyfast
+set noro                    " Don't disable buffer editing on read only files...(just saving)
 set showtabline=2           " 0 = no tabline, 2 = always
 set foldmethod=manual       " Don't fold up (see zf)
 set bri                     " indent if wrapping
