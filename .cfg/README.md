@@ -37,6 +37,11 @@ configue terminal to dark theme, no menu bar, hide scrollbar
 
 *Now you have beautiful undecorated tiling windows with semantic run-or-raise*
 
-Note: these settings work on Gnome Helln 3.32.2. Consider updating, freezing or rollback if they break.
+Note: these settings work on Gnome Shell 3.32.2. Consider updating, freezing or rollback if they break.
 
+mkdir ~/.vim/swap
+enable emoticons through 
+sudo pacman -S noto-fonts-emoji
+copy 75-noto-color-emoji.conf file to /etc/fonts/conf.avail/ 
+sudo ln -sf /etc/fonts/conf.avail/75-noto-color-emoji.conf /etc/fonts/conf.d/
 ```

@@ -180,6 +180,7 @@ map <leader>F <Plug>(easymotion-F)
 " nnoremap <silent> <C-f> :NERDTree <CR>
 nnoremap <silent> <C-f> <Nop>
 
+" For navigating fzf menus 
 nnoremap <C-k> a<C-x>s<C-p>
 nnoremap <C-j> a<C-x>s<C-p>
 
@@ -313,6 +314,11 @@ autocmd FileType text,markdown,tex setlocal shiftwidth=2
 let g:tex_coment_nospell=1
 autocmd FileType tex,markdown,text syntax spell toplevel
 autocmd FileType tex,markdown,text setlocal spell
+" Handy tip: control-v captures the keystroke
+inoremap <PageUp> <Nop>
+inoremap <PageDown> <Nop>
+noremap <PageUp> <Nop>
+noremap <PageDown> <Nop>
 
 " Some plugin is unsetting this...
 set textwidth=0            " was 79, dont auto Line width (pep syntax check)
