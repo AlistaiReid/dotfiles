@@ -41,7 +41,9 @@ Note: these settings work on Gnome Shell 3.32.2. Consider updating, freezing or 
 
 mkdir ~/.vim/swap
 enable emoticons through 
-sudo pacman -S noto-fonts-emoji
-copy 75-noto-color-emoji.conf file to /etc/fonts/conf.avail/ 
-sudo ln -sf /etc/fonts/conf.avail/75-noto-color-emoji.conf /etc/fonts/conf.d/
+sudo pacman -S ttf-bitstream-vera
+
+
+Font scaling:
+gsettings set org.gnome.desktop.interface text-scaling-factor 1.1
 ```

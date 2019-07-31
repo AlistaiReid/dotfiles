@@ -19,7 +19,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-eunuch'               " for :SudoWrite :Rename
     Plug 'itchyny/lightline.vim'          " Status line
     Plug 'taohexxx/lightline-buffer'    " Buffer navigate
-    " Plug 'taohex/lightline-buffer'      " Buffer navigate
     Plug 'moll/vim-bbye'                  " Soft buffer close
     Plug 'easymotion/vim-easymotion'      " hilights your motions with \\
     " Plug 'justinmk/vim-sneak'           " Sneak to character pair with s/z{ab}
@@ -28,8 +27,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-commentary'           " Block commenting verb
     Plug 'tpope/vim-abolish'              " word manipulation
     Plug 'w0rp/ale'                       " Async Linting Engine
-    Plug 'maralla/completor.vim'          " Code completor (pip install jedi)
-    Plug 'LnL7/vim-nix'                   " Syntax & indentation for .nix
+    " Plug 'maralla/completor.vim'          " Code completor (pip install jedi)
+    " Plug 'LnL7/vim-nix'                   " Syntax & indentation for .nix
 call plug#end()
 
 " No bells
