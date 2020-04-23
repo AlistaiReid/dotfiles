@@ -173,6 +173,7 @@ showme(){
 alias gvim='gvim --remote-silent'
 
 function npm-do { (PATH=$(npm bin):$PATH; eval $@;) }
-
+export PIPENV_VENV_IN_PROJECT=1
+eval "$(pipenv --completion)"
 
 export QT_AUTO_SCREEN_SCALE_FACTOR=1

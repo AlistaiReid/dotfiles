@@ -42,8 +42,11 @@ Note: these settings work on Gnome Shell 3.32.2. Consider updating, freezing or 
 mkdir ~/.vim/swap
 enable emoticons through 
 sudo pacman -S ttf-bitstream-vera
-
+and maybe ms-fonts?
 
 Font scaling:
 gsettings set org.gnome.desktop.interface text-scaling-factor 1.1
+
+Set your mergetool:
+git config --global merge.tool meld
 ```
