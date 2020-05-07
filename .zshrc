@@ -104,7 +104,8 @@ alias dockerclean='dockercleanc || true && dockercleani'
 
 # Handy shortcuts
 alias stash="mv -t ~/tmp/ "
-alias au="ag -G \".*py$\" "  # search in python files
+# alias au="ag -G \".*py$\" "  # search in python files
+
 export PATH=$HOME/.tools:$PATH
 
 # Python virtual envs
@@ -163,11 +164,6 @@ label Untitled
 # If you want to use fzf interactively in terminal
 # [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# function for displaying config files without thinking about where they are
-showme(){
-    which "$1"
-    which "$1" | xargs cat | more
-}
 
 # source <(kubectl completion zsh)
 alias gvim='gvim --remote-silent'
@@ -175,5 +171,17 @@ alias gvim='gvim --remote-silent'
 function npm-do { (PATH=$(npm bin):$PATH; eval $@;) }
 export PIPENV_VENV_IN_PROJECT=1
 eval "$(pipenv --completion)"
+
+# Function to search Python CODE for keywords
+au() {
+ ag -G ".*py$" "^[^#]$@"
+}
+
+# function for displaying config files without thinking about where they are
+showme(){
+    which "$1"
+    which "$1" | xargs cat | more
+}
+
 
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
