@@ -9,6 +9,9 @@ if empty(glob('~/.vim/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall | source $MYVIMRC
 endif
 
+" Stop the annoying message on load
+set cmdheight=1  " 2 means fewer messages where you need to press enter
+
 " List of active plugins
 call plug#begin('~/.vim/plugged')
     " Plug 'scrooloose/nerdtree'          " Tree based file browser (ctrl-f)
@@ -124,7 +127,7 @@ set colorcolumn=80          " Show that last column
 set scrolloff=80            " How close can you get to the edge without scrolling
 set number                  " display line numbers
 set laststatus=2            " Make sure status line always shows
-set shortmess=ITA           " No Intro, Truncate short messages, Abbreviate
+set shortmess=a           " No Intro, Truncate short messages, Abbreviate
 set incsearch               " Incremental search
 set ssop-=options           " Don't save settings in a session - allows changes to
 set ssop-=folds             " this vimrc file to apply to old sessions.
@@ -282,7 +285,7 @@ sunmap ge
 " Allow wrapping
 function ToggleWrap()
   if &wrap
-    echo "Wrap OFF"
+    " echo "Wrap OFF"
     setlocal nowrap
     set virtualedit=all
     silent! nunmap <buffer> <Up>
@@ -296,7 +299,7 @@ function ToggleWrap()
     silent! nunmap <buffer> j
     silent! nunmap <buffer> k
   else
-    echo "Wrap ON"
+    " echo "Wrap ON"
     setlocal wrap nolist
     set virtualedit=
     setlocal display+=lastline
@@ -341,6 +344,7 @@ let g:closetag_emptyTags_caseSensitive = 1
 
 let g:closetag_shortcut = '>'
 let g:closetag_close_shortcut = '<C>>'
+
 
 " Some plugin is unsetting this...
 set textwidth=0            " was 79, dont auto Line width (pep syntax check)

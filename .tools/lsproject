@@ -37,7 +37,7 @@ subhome = root.startswith(home) and root != home
 if not (git or subhome):
     # for git and folders in the users home directory, give full subtree,
     # Otherwise just give current directory
-    walk = ((cwd, None, 
+    walk = ((cwd, None,
              [f for f in os.listdir(".") if not os.path.isdir(f)]),)
 else:
     walk = os.walk(root)
@@ -70,7 +70,7 @@ for dname, _, files in walk:
         # now wind backwards to the last slash
         while i > 0 and dname[i] != "/":
             i -= 1
-        back = "../" * (1 + sup[i:].count('/'))
+        back = "../" * (1 + max(0, sup[i:].count('/')-1))
         fwd = dname[i:]
     # print(dname, " == ", back + fwd)
     if fwd.startswith("/"):
