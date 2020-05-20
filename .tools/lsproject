@@ -3,92 +3,109 @@ import os
 
 # Folders to ignore
 ignore = [".mypy", ".git", ".pytest", "__pycache__", ".egg-info", ".cache",
-          ".mypy_cache"]
+        ".mypy_cache", ".venv", ".ipynb_checkpoints", "__old__"]
 
 # Filenames to ignore
 fignore = [".mod", ".7z", ".png", ".jpg", ".pdf", ".xlsx", ".dat", ".aux",
-           ".tmp"]
-
-# Try to list the current git project's files
-cwd = os.getcwd()
-
-levels = ["/"]
-for part in cwd.split("/"):
-    if part:
-        levels.append(levels[-1] + part + "/")
-levels = levels[::-1]
-
-# Now detect gitrepo
-root = cwd
-git = False
-for level in levels:
-    target = level + ".git"
-    if os.path.exists(target) and not os.path.isfile(target):
-        root = level
-        git = True
-        break
-
-root += "/"
-
-# Check subfolders
-home = os.path.expanduser("~/")
-subhome = root.startswith(home) and root != home
-# make a list of directories and files
-if not (git or subhome):
-    # for git and folders in the users home directory, give full subtree,
-    # Otherwise just give current directory
-    walk = ((cwd, None,
-             [f for f in os.listdir(".") if not os.path.isdir(f)]),)
-else:
-    walk = os.walk(root)
+        ".tmp"]
 
 
-nroot = len(root)
-sup = cwd[nroot-1:]
+def main():
+    home = os.path.expanduser("~/")
 
-outputs = []
+    # Try to list the current git project's files
+    cwd = os.getcwd() + "/"
+    inrepo, root = git_root(cwd)
 
-for dname, _, files in walk:
-    dname = dname[nroot:]
+    # If we arent in git, but we are in our home folder
+    subhome = cwd.startswith(home) and cwd != home
 
+    if inrepo or subhome:
+        # walk entire tree
+        # walk -> path, subfolders, subfiles
+        walk = os.walk(root)
+    else:
+        # Otherwise just list current directory
+        walk = ((cwd, [],
+                [f for f in os.listdir(".") if not os.path.isdir(f)]),)
+
+    # trim the root path off the current path
+    outputs = []
+
+    for path, _, files in walk:
+
+        # Turn into path from cwd
+        relpath = relative(path, cwd)
+
+        # Check if we should skip entire folder
+        if skip(path, ignore):
+            continue
+
+        # For each file in folder
+        for f in files:
+
+            # Check if we should skip
+            if skip(f, fignore):
+                continue
+
+            # Combine into relative filename
+            ffname = relpath + f
+
+            # Assign a sorting priority
+            # priority = ffname.count("../") + ffname.count("/") + \
+            #     f.startswith(".")
+            # outputs.append((priority, ffname))
+            priority = "" if f.endswith(".py") else "Z"*10
+            # push parent folder to end
+            priority = priority + relpath.replace('../', 'ZZ/')
+            outputs.append((priority, ffname))
+
+    v = [n for p, n in sorted(outputs)]
+
+    for ff in v:
+        print(ff)
+
+
+def git_root(cwd):
+
+    levels = ["/"]
+    for part in cwd.split("/"):
+        if part:
+            levels.append(levels[-1] + part + "/")
+    levels = levels[::-1]
+
+    # If git repo, set the root to repo root
+    for level in levels:
+        target = level + ".git"
+        if os.path.exists(target) and not os.path.isfile(target):
+            return True, level
+
+    return False, cwd
+
+
+def skip(path, ignorev):
+    # Apply the ignores by filename
     skip = False
-    for ig in ignore:
-        if ig in dname:
+    for ig in ignorev:
+        if ig in path:
             skip = True
             break
-    if skip:
-        continue
+    return skip
 
-    if dname.startswith(sup):
-        back = ""
-        fwd = dname[len(sup):]
-    else:
-        i = 0
-        stop = min(len(dname), len(sup)) - 1
-        while i < stop and dname[i] == sup[i]:
-            i += 1
-        # now wind backwards to the last slash
-        while i > 0 and dname[i] != "/":
-            i -= 1
-        back = "../" * (1 + max(0, sup[i:].count('/')-1))
-        fwd = dname[i:]
-    # print(dname, " == ", back + fwd)
-    if fwd.startswith("/"):
-        fwd = fwd[1:]
+
+def relative(path, cwd):
+    # similar to relpath, but doesnt do weird stuff with dots.
+    start = len(os.path.commonpath((path, cwd))) + 1  # include slash
+    fwd = path[start:]
+    back = "../" * cwd[start:].count('/')  # it doesnt matter what they are
     path = back + fwd
+
+    # Put a trailing slash
     if len(path) and not path.endswith("/"):
         path += "/"
 
-    for f in files:
-        for g in fignore:
-            if g in f:
-                break
-        else:
-            ffname = (path + f)
-            priority = ffname.count("../") + ffname.count("/") + \
-                f.startswith(".")
-            outputs.append((priority, ffname))
+    return path
 
-v = [n for p, n in sorted(outputs)]
-for ff in v:
-    print(ff)
+
+if __name__ == "__main__":
+    main()
