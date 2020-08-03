@@ -183,5 +183,7 @@ showme(){
     which "$1" | xargs cat | more
 }
 
+# plugins=(git)
+plugins=(chucknorris, nyan)
 
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
