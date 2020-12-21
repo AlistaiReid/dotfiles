@@ -86,7 +86,7 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 # pretty colours
-alias ls='ls --color=auto'
+# alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 alias vim='vimx'
 alias ccat='pygmentize'
@@ -104,7 +104,11 @@ alias dockerclean='dockercleanc || true && dockercleani'
 
 # Handy shortcuts
 alias stash="mv -t ~/tmp/ "
-# alias au="ag -G \".*py$\" "  # search in python files
+alias au="ag -G \".*py$\" "  # search in python files
+# # Function to search Python CODE for keywords
+# au() {
+#  ag -G ".*py$" "^[^#]$@"
+# }
 
 export PATH=$HOME/.tools:$PATH
 
@@ -172,10 +176,6 @@ function npm-do { (PATH=$(npm bin):$PATH; eval $@;) }
 export PIPENV_VENV_IN_PROJECT=1
 eval "$(pipenv --completion)"
 
-# Function to search Python CODE for keywords
-au() {
- ag -G ".*py$" "^[^#]$@"
-}
 
 # function for displaying config files without thinking about where they are
 showme(){
@@ -187,3 +187,8 @@ showme(){
 plugins=(chucknorris, nyan)
 
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
+
+# pacin bat lsd delta
+alias cat="bat"
+alias tree="lsd --tree --icon never"
+alias ls="lsd --icon never"

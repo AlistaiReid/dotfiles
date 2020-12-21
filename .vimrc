@@ -408,6 +408,7 @@ imap <f2> <esc>b~ea
 
 " A plugin is unsetting this:
 iabbrev +- ±
+abbrev ** •
 let g:EasyMotion_keys='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 
 " Fancy movement
