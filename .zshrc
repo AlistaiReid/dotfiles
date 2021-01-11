@@ -173,7 +173,7 @@ label Untitled
 alias gvim='gvim --remote-silent'
 
 function npm-do { (PATH=$(npm bin):$PATH; eval $@;) }
-export PIPENV_VENV_IN_PROJECT=1
+export PIPENV_VENV_IN_PROJECT=0
 eval "$(pipenv --completion)"
 
 
