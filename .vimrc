@@ -15,23 +15,25 @@ endif
 " List of active plugins
 call plug#begin('~/.vim/plugged')
     " Plug 'scrooloose/nerdtree'          " Tree based file browser (ctrl-f)
-    Plug 'bkad/CamelCaseMotion'           " Break CamelCase into words.
-    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+    " Plug 'bkad/CamelCaseMotion'           " Break CamelCase into words.
+    Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
+    " , 'do': './install --all' }
     Plug 'junegunn/fzf.vim'               " Advanced file searching
     Plug 'jnurmine/Zenburn'               " Nice dark scheme
     Plug 'tpope/vim-eunuch'               " for :SudoWrite :Rename
     Plug 'itchyny/lightline.vim'          " Status line
     Plug 'taohexxx/lightline-buffer'      " Buffer navigate
     Plug 'moll/vim-bbye'                  " Soft buffer close
-    Plug 'easymotion/vim-easymotion'      " hilights your motions with \\
-    Plug 'alvan/vim-closetag'             " for html tags
+    Plug 'easymotion/vim-easymotion'      " hilights your motions with [leader][leader] (space space)
+    " Plug 'alvan/vim-closetag'             " for html tags
     " Plug 'justinmk/vim-sneak'           " Sneak to character pair with s/z{ab}
     Plug 'tommcdo/vim-lion'               " align characters gl, gL
     Plug 'hynek/vim-python-pep8-indent'   " Pep-8 style indenting
     Plug 'tpope/vim-commentary'           " Block commenting verb
-    Plug 'tpope/vim-abolish'              " word manipulation
+    " Plug 'tpope/vim-abolish'              " multi-case iabbrevs
     Plug 'dense-analysis/ale'               " Async Linting Engine (not required)
-    Plug 'vim-python/python-syntax'         " Modernise syntax hilighting
+    " Potentially move from ale to coc-vim (including a move to neovide?)
+    " Plug 'vim-python/python-syntax'         " Modernise syntax hilighting
     " Plug 'neoclide/coc.nvim', {'branch': 'release'}  " Good completor
     " NOTE, for language integrations, type these 
     " :CocConfig for config file
@@ -103,7 +105,8 @@ let g:python_highlight_all = 1
 
 :noremap <leader>e :s/\.\ /.\r# /g<CR>
 
-" au FocusLost * :echo "Focus lost: saving all buffers" | :silent wall
+" au FocusLost * :echo "Autosaved." | :silent w
+" vs wall for saving all buffers
 
 " Default Formatting and Indenting
 syntax on
@@ -357,7 +360,7 @@ nnoremap <C-j> a<C-x>s<C-p>
 
 " completor using ctrl-j and ctrl-k with auto-close. <C-n>=Down, <C-p>
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : ""
-inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : ""
+inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "<C-k>"
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <CR> pumvisible() ? "\<C-y><Esc>" : "\<CR>"
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
@@ -404,11 +407,7 @@ nmap X 0D
 imap X- X_
 imap <f2> <esc>b~ea
 
-
-
 " A plugin is unsetting this:
-iabbrev +- ±
-abbrev ** •
 let g:EasyMotion_keys='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 
 " Fancy movement
@@ -416,21 +415,20 @@ let g:EasyMotion_keys='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ12345
 " nmap ) <Plug>(IndentWiseNextGreaterIndent)
 " map <C-[> <Plug>(IndentWisePreviousEqualIndent)
 " map <C-]> <Plug>(IndentWiseNextEqualIndent)
-
 " Navigate errors - now done using COC
 " nnoremap <silent> <F2> :lprev<CR>
 " nnoremap <silent> <F3> :lnext<CR>
 " nnoremap <silent> <S-Enter> :lopen<CR>
 
 " CamelCase Motion
-map <silent> w <Plug>CamelCaseMotion_w
-map <silent> b <Plug>CamelCaseMotion_b
-map <silent> e <Plug>CamelCaseMotion_e
-map <silent> ge <Plug>CamelCaseMotion_ge
-sunmap w
-sunmap b
-sunmap e
-sunmap ge
+" map <silent> w <Plug>CamelCaseMotion_w
+" map <silent> b <Plug>CamelCaseMotion_b
+" map <silent> e <Plug>CamelCaseMotion_e
+" map <silent> ge <Plug>CamelCaseMotion_ge
+" sunmap w
+" sunmap b
+" sunmap e
+" sunmap ge
 
 " Allow wrapping
 function ToggleWrap()

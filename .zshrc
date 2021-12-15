@@ -90,6 +90,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 alias grep='grep --color=auto'
 alias vim='vimx'
 alias ccat='pygmentize'
+alias ag='ag -a'
 
 alias gitgg='git log --oneline --decorate --graph --all'
 
@@ -183,12 +184,34 @@ showme(){
     which "$1" | xargs cat | more
 }
 
-# plugins=(git)
-plugins=(chucknorris, nyan)
-
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 
 # pacin bat lsd delta
 alias cat="bat"
 alias tree="lsd --tree --icon never"
-alias ls="lsd --icon never"
+# alias ls="lsd --icon never"
+alias ls="ls"
+
+# sierra project listing
+export GCP_ZONE="australia-southeast1-b"
+alias act-compute='CLOUDSDK_COMPUTE_ZONE=$GCP_ZONE gcloud compute --project="act-edu"'
+act-ssh() {
+    gcloud compute ssh secure@${1:-devbox-$USER} --zone=$GCP_ZONE --project="act-edu" --tunnel-through-iap -- -L 8888:localhost:8888
+}
+act-upload() {
+    gcloud compute scp $1 secure@${3:-devbox-$USER}:$2 --zone=$GCP_ZONE --project="act-edu" --tunnel-through-iap --recurse
+}
+act-download() {
+    gcloud compute scp secure@${3:-devbox-$USER}:$1 ${2:-.} --zone=$GCP_ZONE --project="act-edu" --tunnel-through-iap --recurse
+}
+
+alias ubp='CLOUDSDK_COMPUTE_ZONE=$GCP_ZONE gcloud --project="ubp-fair"'
+ubp-ssh() {
+    gcloud compute ssh secure@${1:-devbox-$USER} --zone=$GCP_ZONE --project="ubp-fair" --tunnel-through-iap --ssh-flag="-XC" -- -L 8888:localhost:8888 
+}
+ubp-upload() {
+    gcloud compute scp $1 secure@${3:-devbox-$USER}:$2 --zone=$GCP_ZONE --project="ubp-fair" --tunnel-through-iap --recurse
+}
+ubp-download() {
+    gcloud compute scp secure@${3:-devbox-$USER}:$1 ${2:-.} --zone=$GCP_ZONE --project="ubp-fair" --tunnel-through-iap --recurse
+}

@@ -3,11 +3,12 @@ import os
 
 # Folders to ignore
 ignore = [".mypy", ".git", ".pytest", "__pycache__", ".egg-info", ".cache",
-        ".mypy_cache", ".venv", ".ipynb_checkpoints", "__old__"]
+        ".mypy_cache", ".venv", ".ipynb_checkpoints", "__old__",
+          'node_modules', 'tmp']
 
 # Filenames to ignore
 fignore = [".mod", ".7z", ".png", ".jpg", ".pdf", ".xlsx", ".dat", ".aux",
-        ".tmp"]
+        ".tmp", 'scored_', 'params_', 'metrics_', '.joblib']
 
 
 def main():

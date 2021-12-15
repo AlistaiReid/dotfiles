@@ -14,7 +14,7 @@ remotes = run("git branch -r --merged origin/develop")
 
 lists = merged.split() + remotes.split()
 blacklist = [
-    "master", "develop", "HEAD", "->", "*"
+    "main", "master", "develop", "HEAD", "->", "*"
 ]
 lists = [
     l for l in lists if not any(l.endswith(b) for b in blacklist)
