@@ -93,13 +93,14 @@ colorscheme zenburn
 let g:python_highlight_all = 1
 " Linting setup:
 " let &runtimepath.=',~/.vim/bundle/ale'
+let g:ale_linters = {'python': ['flake8']}
 " let g:ale_lint_on_text_changed='normal'
 " let g:ale_lint_on_insert_leave=1
 " let g:ale_echo_msg_format='[%linter%] %code:%%s'  
 " speed up suggested on site
 " let g:pymode_rope = 0
-" nnoremap <silent> <Up>  :ALEPreviousWrap<cr>
-" nnoremap <silent> <Down> :ALENextWrap<cr>
+nnoremap <silent> <Up>  :ALEPreviousWrap<cr>
+nnoremap <silent> <Down> :ALENextWrap<cr>
 " nnoremap <Left>  [s
 " nnoremap <Right> ]s
 
@@ -201,10 +202,10 @@ else
 endif
 
 " Use `[g` and `]g` to navigate diagnostics (or F2/F3)
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-nmap <silent> <F2> <Plug>(coc-diagnostic-prev)
-nmap <silent> <F3> <Plug>(coc-diagnostic-next)
+" nmap <silent> [g <Plug>(coc-diagnostic-prev)
+" nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" nmap <silent> <F2> <Plug>(coc-diagnostic-prev)
+" nmap <silent> <F3> <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
