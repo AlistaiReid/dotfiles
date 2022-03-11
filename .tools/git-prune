@@ -7,14 +7,15 @@ def run(cmd):
     # print(cmd)
     return subprocess.check_output(cmd.split()).decode()
 
-run("git fetch --prune")
-merged = run("git branch --merged origin/develop")
-remotes = run("git branch -r --merged origin/develop")
+remote = "origin"
+run(f"git fetch --prune {remote}")
+merged = run(f"git branch --merged {remote}/main")
+remotes = run(f"git branch -r --merged {remote}/main")
 # subprocess.Popen("gitg")
 
 lists = merged.split() + remotes.split()
 blacklist = [
-    "main", "master", "develop", "HEAD", "->", "*"
+    "main", "master", "develop", "demo", "HEAD", "->", "*"
 ]
 lists = [
     l for l in lists if not any(l.endswith(b) for b in blacklist)
@@ -34,9 +35,9 @@ if len(lists):
 
     for s in select:
         if s.startswith("origin/"):
-            run("git push origin :" + s[7:])
+            run(f"git push -d {remote} {s[len(remote)+1:]}")
         else:
-            run("git branch -d " + s)
+            run(f"git branch -d {s}")
 else:
     print("Repo is pruned.")
     # Dialog.set_background_title() requires pythondialog 2.13 or later
