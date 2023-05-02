@@ -494,6 +494,8 @@ let g:closetag_emptyTags_caseSensitive = 1
 let g:closetag_shortcut = '>'
 let g:closetag_close_shortcut = '<C>>'
 
+" paste without swapping buffer by default
+xnoremap p pgvy
 
 " Some plugin is unsetting this...
 set textwidth=0            " was 79, dont auto Line width (pep syntax check)

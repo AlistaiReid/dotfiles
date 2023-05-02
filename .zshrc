@@ -88,6 +88,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 # pretty colours
 # alias ls='ls --color=auto'
 alias grep='grep --color=auto'
+# alias egrep='grep -E --color=auto'
 alias vim='vimx'
 alias ccat='pygmentize'
 alias ag='ag -a'
@@ -116,7 +117,8 @@ export PATH=$HOME/.tools:$PATH
 # Python virtual envs
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 export WORKON_HOME=~/.envs
-source $(which virtualenvwrapper.sh)
+# hotfix virtualenvwrapper warning
+source $(which virtualenvwrapper.sh) &> /dev/null
 
 
 # Make template python files
@@ -139,9 +141,9 @@ alias pipupg="pip install -U pip && pip freeze | grep -v 'git' | cut -d = -f 1 |
 # Get rid of extensive tensorflow logging.
 export TF_CPP_MIN_LOG_LEVEL=3
 
-
 alias pacall="LC_ALL=C pacman -Qi | sed -n '/^Name[^:]*: \(.*\)/{s//\1 /;x};/^Installed[^:]*: \(.*\)/{s//\1/;H;x;s/\n//;p}' | sort -nk2 | column -t"
-alias pacupg='sudo -v && yay -Syu --noconfirm' # Synchronize with repositories before upgrading packages that are out of date on the local system.
+alias pacupg='sudo -v && pacman -Syu --noconfirm'
+# alias yay -Syu --noconfirm' # Synchronize with repositories before upgrading packages that are out of date on the local system.
 alias pacin='sudo -v && yay -S --noconfirm' # Install specific package(s) from the repositories
 alias pacins='sudo pacman -U' # Install specific package not from the repositories but from a file
 alias pacre='yay -Rc' # Remove the specified package(s), retaining its configuration(s) and required dependencies
@@ -190,7 +192,7 @@ export QT_AUTO_SCREEN_SCALE_FACTOR=1
 alias cat="bat"
 alias tree="lsd --tree --icon never"
 # alias ls="lsd --icon never"
-alias ls="ls"
+# alias ls="ls"
 
 # sierra project listing
 export GCP_ZONE="australia-southeast1-b"
@@ -205,13 +207,5 @@ act-download() {
     gcloud compute scp secure@${3:-devbox-$USER}:$1 ${2:-.} --zone=$GCP_ZONE --project="act-edu" --tunnel-through-iap --recurse
 }
 
-alias ubp='CLOUDSDK_COMPUTE_ZONE=$GCP_ZONE gcloud --project="ubp-fair"'
-ubp-ssh() {
-    gcloud compute ssh secure@${1:-devbox-$USER} --zone=$GCP_ZONE --project="ubp-fair" --tunnel-through-iap --ssh-flag="-XC" -- -L 8888:localhost:8888 
-}
-ubp-upload() {
-    gcloud compute scp $1 secure@${3:-devbox-$USER}:$2 --zone=$GCP_ZONE --project="ubp-fair" --tunnel-through-iap --recurse
-}
-ubp-download() {
-    gcloud compute scp secure@${3:-devbox-$USER}:$1 ${2:-.} --zone=$GCP_ZONE --project="ubp-fair" --tunnel-through-iap --recurse
-}
+cd ~
+
