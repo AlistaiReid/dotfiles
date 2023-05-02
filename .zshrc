@@ -7,7 +7,7 @@ source ~/.private
 # CASE_SENSITIVE="true"
 # HYPHEN_INSENSITIVE="true"
 # DISABLE_AUTO_UPDATE="true"
-export UPDATE_ZSH_DAYS=7
+export UPDATE_ZSH_DAYS=14
 # DISABLE_LS_COLORS="true"
 DISABLE_AUTO_TITLE="true"
 # ENABLE_CORRECTION="true"
@@ -65,7 +65,7 @@ HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.zsh_history
 
-# Completion system
+# Completion system [TODO: review]
 autoload -Uz compinit
 compinit
 zstyle ':completion:*' auto-description 'specify: %d'
@@ -86,126 +86,64 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 # pretty colours
-# alias ls='ls --color=auto'
 alias grep='grep --color=auto'
-# alias egrep='grep -E --color=auto'
 alias vim='vimx'
 alias ccat='pygmentize'
 alias ag='ag -a'
 
+# Git shortcuts
 alias gitgg='git log --oneline --decorate --graph --all'
+alias track='git log --follow --find-renames=60%'
 
 # Docker shortcuts
 alias dockerkillall='docker kill $(docker ps -q)'
 alias dockercleanc='printf "\n>>> Deleting stopped containers\n\n" && docker rm $(docker ps -a -q)'
 alias dockercleani='printf "\n>>> Deleting untagged images\n\n" && docker rmi $(docker images -q -f dangling=true)'
 alias dockerclean='dockercleanc || true && dockercleani'
-# alias somethinglike='cat ~/.zsh_history | grep'
-# alias ipython="python3 -c 'import IPython; IPython.terminal.ipapp.launch_new_instance()'"
-# alias sshc="ssh -i ~/.ssh/aws.pem -l ec2-user"
 
-# Handy shortcuts
-alias stash="mv -t ~/tmp/ "
-alias au="ag -G \".*py$\" "  # search in python files
-# # Function to search Python CODE for keywords
-# au() {
-#  ag -G ".*py$" "^[^#]$@"
-# }
-
-export PATH=$HOME/.tools:$PATH
-
-# Python virtual envs
+# Python virtual envs with virtualenvwrapper
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 export WORKON_HOME=~/.envs
-# hotfix virtualenvwrapper warning
+# hotfix egrep warning (when will they fix this?)
 source $(which virtualenvwrapper.sh) &> /dev/null
 
-
-# Make template python files
-alias mk="cp ~/.defaultpy "
-
-# my git config:
-# git init --bare $HOME/.cfg
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias track='git log --follow --find-renames=60%'
-
-# alias git-prune="git fetch --prune && git branch -vv | grep \:\ gone\] | awk '{print \$1}' | xargs -r git branch -D"
-# alias gitfeature="git fetch && echo git push origin origin/develop:feature/\#(trim $1)"
-# alias git-prune="git checkout develop && git pull && git branch --merged origin/develop^ > /tmp/branches && vi /tmp/branches && xargs git branch -d </tmp/branches"
-
-# Attempt to update all the packages in a pip env
-# Really only do this if you are starting a new package
-alias pipupg="pip install -U pip && pip freeze | grep -v 'git' | cut -d = -f 1 | xargs -n1 pip install -U"
-# list --outdated | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
-
-# Get rid of extensive tensorflow logging.
+# Some ML stuff
 export TF_CPP_MIN_LOG_LEVEL=3
+export GCP_ZONE="australia-southeast1-b"
 
-alias pacall="LC_ALL=C pacman -Qi | sed -n '/^Name[^:]*: \(.*\)/{s//\1 /;x};/^Installed[^:]*: \(.*\)/{s//\1/;H;x;s/\n//;p}' | sort -nk2 | column -t"
-alias pacupg='sudo -v && pacman -Syu --noconfirm'
-# alias yay -Syu --noconfirm' # Synchronize with repositories before upgrading packages that are out of date on the local system.
-alias pacin='sudo -v && yay -S --noconfirm' # Install specific package(s) from the repositories
-alias pacins='sudo pacman -U' # Install specific package not from the repositories but from a file
-alias pacre='yay -Rc' # Remove the specified package(s), retaining its configuration(s) and required dependencies
-alias pacrem='yay -Rns' # Remove the specified package(s), its configuration(s) and unneeded dependencies
-alias pacinf='yay -Si' # Display information about a given package in the repositories
-alias pacs='yay -Ss' # Search for package(s) in the repositories
-alias pacloc='yay -Qi' # Display information about a given package in the local database
-alias pacfiles='yay -Ql' # list the files from a certain pacagke
-alias paclocs='yay -Qs' # Search for package(s) in the local database
-alias pacupd='sudo pacman -Sy' # Update and refresh the local package and ABS databases against repositories
-alias pacinsd='sudo pacman -S --asdeps' # Install given package(s) as dependencies of another package
-alias pacmir='sudo pacman -Syy' # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist Created by newuser for 5.2
-# Get kubectl auto-completion stuff!
-# source <(kubectl completion zsh)
-# Git flow completion:
-# source ~/.tools/git-flow-completion/git-flow-completion.zsh
-# config config status.showUntrackedFiles no
-# config remote add origin git@github.com:AlistaiReid/dotfiles.git
-# export LD_LIBRARY_PATH=/opt/cuda/lib64/
-#
-
-# I label my terminal tabs
-label Untitled
-
-# If you want to use fzf interactively in terminal
-# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-
-# source <(kubectl completion zsh)
-alias gvim='gvim --remote-silent'
-
-function npm-do { (PATH=$(npm bin):$PATH; eval $@;) }
-# export PIPENV_VENV_IN_PROJECT=0
-# eval "$(pipenv --completion)"
-
-
-# function for displaying config files without thinking about where they are
+# Admin tools ------------------------------------
+# function for displaying scripts in path without finding them first
 showme(){
     which "$1"
     which "$1" | xargs cat | more
 }
+#
+# Housekeeping shortcuts
+alias stash="mv -t ~/tmp/ "
+alias au="ag -G \".*py$\" "  # search in python files
 
-export QT_AUTO_SCREEN_SCALE_FACTOR=1
+# Add my custom tools to path
+export PATH=$HOME/.tools:$PATH
 
-# pacin bat lsd delta
+# Various aliases -------------------------------
+alias gvim='gvim --remote-silent'
 alias cat="bat"
 alias tree="lsd --tree --icon never"
-# alias ls="lsd --icon never"
-# alias ls="ls"
+alias pacfreeze="LC_ALL=C pacman -Qi | sed -n '/^Name[^:]*: \(.*\)/{s//\1 /;x};/^Installed[^:]*: \(.*\)/{s//\1/;H;x;s/\n//;p}' | sort -nk2 | column -t"
+alias pacupg='sudo pacman -Syu --noconfirm && yay'
+alias pacin='sudo -v && yay -S --noconfirm' # Install specific package(s) from the repositories
+alias pacre='yay -Rc' # Remove the specified package(s), retaining its configuration(s) and required dependencies
+alias pacrm='yay -Rns' # Remove the specified package(s), its configuration(s) and unneeded dependencies
+alias pacinf='yay -Si' # Display information about a given package in the repositories
+alias pacs='yay -Ss' # Search for package(s) in the repositories
+alias pacfiles='yay -Ql' # list the files from a certain pacagke
+# Attempt to update all the packages in a pip env
+alias pipupg="pip install -U pip && pip freeze | grep -v 'git' | cut -d = -f 1 | xargs -n1 pip install -U"
+# my configuration is tracked in git with root being home:
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
-# sierra project listing
-export GCP_ZONE="australia-southeast1-b"
-alias act-compute='CLOUDSDK_COMPUTE_ZONE=$GCP_ZONE gcloud compute --project="act-edu"'
-act-ssh() {
-    gcloud compute ssh secure@${1:-devbox-$USER} --zone=$GCP_ZONE --project="act-edu" --tunnel-through-iap -- -L 8888:localhost:8888
-}
-act-upload() {
-    gcloud compute scp $1 secure@${3:-devbox-$USER}:$2 --zone=$GCP_ZONE --project="act-edu" --tunnel-through-iap --recurse
-}
-act-download() {
-    gcloud compute scp secure@${3:-devbox-$USER}:$1 ${2:-.} --zone=$GCP_ZONE --project="act-edu" --tunnel-through-iap --recurse
-}
-
+# Finishing touches
+label Untitled
+export QT_AUTO_SCREEN_SCALE_FACTOR=1
 cd ~
 
