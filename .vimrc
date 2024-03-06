@@ -170,6 +170,11 @@ set completeopt=menuone,noselect
 "     au FileType tex setlocal iskeyword+=: 
 " augroup END
 
+autocmd FileType typescriptreact {
+    setlocal tabstop=2 |
+    setlocal shiftwidth=2
+}
+
 " Recommendations for coc.vim ========================================
 set cmdheight=1  " they recommend 2
 set updatetime=250  " its usually 4 seconds (4000)
@@ -500,3 +505,4 @@ xnoremap p pgvy
 " Some plugin is unsetting this...
 set textwidth=0            " was 79, dont auto Line width (pep syntax check)
 set wrapmargin=0
+set virtualedit=

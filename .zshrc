@@ -146,4 +146,4 @@ alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 label Untitled
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 cd ~
-
+stty intr ^C 
