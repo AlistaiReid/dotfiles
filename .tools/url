@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Check if both URL and Name parameters are provided
+if [ -z "$1" ] || [ -z "$2" ]; then
+  echo "Usage: $0 <URL> <Name>"
+  exit 1
+fi
+
+# Set URL and Name
+URL=$1
+NAME=$2
+
+# Set file name based on the name (replace spaces with underscores)
+FILENAME="${NAME// /_}.desktop"
+
+# Create the .desktop file
+cat <<EOF > "$FILENAME"
+[Desktop Entry]
+Version=1.0
+Name=$NAME
+Exec=xdg-open $URL
+Icon=text-html
+Type=Application
+EOF
+
+# Make the file executable
+chmod +x "$FILENAME"
+
+echo "Desktop link created: $FILENAME"
